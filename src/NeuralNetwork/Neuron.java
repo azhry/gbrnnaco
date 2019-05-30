@@ -5,7 +5,7 @@
  */
 package NeuralNetwork;
 
-import nn.ant.MathFx;
+import Control.MathFx;
 
 /**
  *
@@ -19,6 +19,7 @@ public class Neuron {
     
     private double weight;
     private double value;
+    private double mappedValue;
     private Type type;
     
     public Neuron(double weight, Type type) {
@@ -39,23 +40,19 @@ public class Neuron {
         this.value = value;
     }
     
-    public void setType(Type type) {
-        this.type = type;
+    public void setMappedValue(double mappedValue) {
+        this.mappedValue = mappedValue;
     }
     
-    public void calculateValue(double inputValue) {
-        this.value = this.sigmoid(inputValue);
+    public void setType(Type type) {
+        this.type = type;
     }
     
     public double getValue() {
         return this.value;
     }
     
-    private double sigmoid(double value) {
-        return 1 / (1 + Math.pow(Math.E, -value));
-    }
-    
-    private double softmax(double value) {
-        return value;
+    public double getMappedValue() {
+        return this.mappedValue;
     }
 }

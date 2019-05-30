@@ -17,7 +17,7 @@ public class Activation {
     
     public static double sigmoidDerivative(double n) {
         double sigmoid = Activation.sigmoid(n);
-        return sigmoid * (1 - sigmoid);
+        return sigmoid * (1.0 - sigmoid);
     }
     
     public static double[] softmax(double[] n) {

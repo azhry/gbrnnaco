@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nn.ant;
+package Control;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -37,13 +37,13 @@ public class NNANT {
         
         Size ksize = new Size(height, width);
         
-        Mat image = Imgcodecs.imread(BASE_DIR + "/data/ttd4/rsz_erlina1.bmp");
+        Mat image = Imgcodecs.imread(BASE_DIR + "/data/erlina/rsz_erlina1.bmp");
         double theta = thetaDeg * Math.PI / 180;
         double psi = psiDeg * Math.PI / 180;
         
         Mat mat1 = new Mat(image.rows(), image.cols(), CvType.CV_8UC1);
         Imgproc.cvtColor(image, mat1, Imgproc.COLOR_RGB2GRAY);
-    
+        
         Mat kernel = Imgproc.getGaborKernel(ksize, sigma, theta, lambda, gamma);
         Mat dest = new Mat(mat1.rows(), mat1.cols(), image.type());
         Imgproc.filter2D(mat1, dest, mat1.type(), kernel);
