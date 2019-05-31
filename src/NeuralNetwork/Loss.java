@@ -17,7 +17,7 @@ public class Loss {
             loss += ((actual[i] * Math.log(predicted[i])) + 
                     ((1 - actual[i]) * Math.log(1 - predicted[i])));
         }
-        loss *= -(1 / actual.length);
+        loss *= -(1.0 / (double)actual.length);
         return loss;
     }
     

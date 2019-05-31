@@ -5,6 +5,8 @@
  */
 package NeuralNetwork;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Azhary Arliansyah
