@@ -5,7 +5,12 @@
  */
 package Entity;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -55,10 +60,32 @@ public class ImageData {
     
     public ImageData(String path, String label) {
         this.label = label;
-        System.out.println(path);
         this.img = Imgcodecs.imread(path);
         this.rawImg = new BufferedImage(this.img.width(), this.img.height(), 
                 BufferedImage.TYPE_INT_ARGB);
+    }
+    
+    public void filterImg(Mat kernel) {
+        this.grayImg = new Mat(this.img.rows(), this.img.cols(), 
+                CvType.CV_8UC1);
+        Imgproc.cvtColor(this.img, this.grayImg, Imgproc.COLOR_RGB2GRAY);
+        
+        this.filteredImg = new Mat(this.grayImg.rows(), this.grayImg.cols(), 
+                this.img.type());
+        Imgproc.filter2D(this.grayImg, this.filteredImg, this.grayImg.type(), 
+                kernel);
+        
+        this.filteredData = new double[this.filteredImg.rows() * 
+                this.filteredImg.cols()];
+        int i = 0;
+        for (int j = 0; j < this.filteredImg.rows(); j++) {
+            for (int k = 0; k < this.filteredImg.cols(); k++) {
+                for (int l = 0; l < this.filteredImg.channels(); l++) {
+                    this.filteredData[i] = this.filteredImg.get(j, k)[l];
+                    i++;
+                } 
+            }
+        }
     }
     
     public Mat getImg() {
@@ -71,6 +98,25 @@ public class ImageData {
     
     public Mat getGrayImg() {
         return this.grayImg;
+    }
+    
+    public Image getBufferFilteredImg() {
+        byte[] data = new byte[this.filteredImg.width() * 
+                this.filteredImg.height() * (int)this.filteredImg.elemSize()];
+        this.filteredImg.get(0, 0, data);
+        int type;
+        if (this.filteredImg.channels() == 1) {
+            type = BufferedImage.TYPE_BYTE_GRAY;
+        }
+        else {
+            type = BufferedImage.TYPE_3BYTE_BGR;
+        }
+        
+        BufferedImage im = new BufferedImage(this.filteredImg.width(), 
+                this.filteredImg.height(), type);
+        im.getRaster().setDataElements(0, 0, this.filteredImg.width(), 
+                this.filteredImg.height(), data);
+        return im;
     }
     
     public Mat getFilteredImg() {

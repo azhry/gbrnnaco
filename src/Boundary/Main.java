@@ -23,12 +23,18 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 /**
  *
  * @author Azhary Arliansyah
  */
 public class Main extends javax.swing.JFrame {
+    
+    private List<ImageData> data;
+    private List<ImageRow> rowData;
 
     /**
      * Creates new form Home
@@ -60,21 +66,21 @@ public class Main extends javax.swing.JFrame {
         loadImageButton = new javax.swing.JButton();
         progressBar = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        runGaborButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        gammaField = new javax.swing.JTextField();
+        lambdaField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        sigmaField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
-        jSpinner2 = new javax.swing.JSpinner();
-        jSpinner3 = new javax.swing.JSpinner();
-        jSpinner4 = new javax.swing.JSpinner();
+        kernelWidthField = new javax.swing.JSpinner();
+        kernelHeightField = new javax.swing.JSpinner();
+        psiDegField = new javax.swing.JSpinner();
+        thetaDegField = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -134,12 +140,23 @@ public class Main extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Gabor Parameters");
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/icons8-play-24.png"))); // NOI18N
-        jButton1.setText("Run Gabor");
+        runGaborButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/icons8-play-24.png"))); // NOI18N
+        runGaborButton.setText("Run Gabor");
+        runGaborButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runGabor(evt);
+            }
+        });
 
         jLabel2.setText("Gamma");
 
+        gammaField.setText("1.0");
+
+        lambdaField.setText("4");
+
         jLabel3.setText("Lambda");
+
+        sigmaField.setText("1.4");
 
         jLabel4.setText("Sigma");
 
@@ -151,9 +168,11 @@ public class Main extends javax.swing.JFrame {
 
         jLabel8.setText("Kernel Height");
 
-        jSpinner1.setValue(10);
+        kernelWidthField.setValue(10);
 
-        jSpinner2.setValue(10);
+        kernelHeightField.setValue(10);
+
+        thetaDegField.setValue(135);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -162,15 +181,15 @@ public class Main extends javax.swing.JFrame {
             .addComponent(loadImageButton, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
             .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(runGaborButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1)
-                    .addComponent(jTextField2)
-                    .addComponent(jTextField3)
-                    .addComponent(jSpinner1)
-                    .addComponent(jSpinner2)
+                    .addComponent(gammaField)
+                    .addComponent(lambdaField)
+                    .addComponent(sigmaField)
+                    .addComponent(kernelWidthField)
+                    .addComponent(kernelHeightField)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -181,8 +200,8 @@ public class Main extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(jLabel8))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jSpinner3)
-                    .addComponent(jSpinner4))
+                    .addComponent(psiDegField)
+                    .addComponent(thetaDegField))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -194,33 +213,33 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(gammaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lambdaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sigmaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(psiDegField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(11, 11, 11)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(thetaDegField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(kernelWidthField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(kernelHeightField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(runGaborButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(13, Short.MAX_VALUE))
@@ -260,9 +279,13 @@ public class Main extends javax.swing.JFrame {
         
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             this.imageListPanel.removeAll();
+            this.data = new ArrayList<>();
+            this.rowData = new ArrayList<>();
             new LoadImageWorker(
                     chooser.getSelectedFile().toString(), 
-                    this.imageListPanel, 
+                    this.imageListPanel,
+                    this.data,
+                    this.rowData,
                     this.progressBar)
                     .execute();
             
@@ -272,19 +295,53 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_loadImageData
 
+    private void runGabor(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runGabor
+        
+        double height = Double.parseDouble(
+                String.valueOf(this.kernelHeightField.getValue()));
+        double width = Double.parseDouble(
+                String.valueOf(this.kernelWidthField.getValue()));
+        double sigma = Double.parseDouble(this.sigmaField.getText());
+        double thetaDeg = Double.parseDouble(
+                String.valueOf(this.thetaDegField.getValue()));
+        double lambda = Double.parseDouble(this.lambdaField.getText());
+        double gamma = Double.parseDouble(this.gammaField.getText());
+        double psiDeg = Double.parseDouble(
+                String.valueOf(this.psiDegField.getValue()));
+        
+        Size kernelSize = new Size(width, height);
+        double theta = thetaDeg * Math.PI / 180;
+        double psi = psiDeg * Math.PI / 180;
+        
+        Mat kernel = Imgproc.getGaborKernel(
+                kernelSize, sigma, theta, lambda, gamma);
+        
+        new RunGaborWorker(
+                    kernel,
+                    this.imageListPanel,
+                    this.data, 
+                    this.rowData, 
+                    this.progressBar)
+                    .execute();
+        
+    }//GEN-LAST:event_runGabor
+
     class LoadImageWorker extends SwingWorker {
 
         private String path;
         private JPanel imagePanel;
         private JProgressBar progressBar;
         private List<ImageRow> rowData;
+        private List<ImageData> data;
         
         public LoadImageWorker(String path, JPanel imagePanel, 
+                List<ImageData> data, List<ImageRow> rowData, 
                 JProgressBar progressBar) {
             this.path = path;
             this.imagePanel = imagePanel;
             this.progressBar = progressBar;
-            this.rowData = new ArrayList<>();
+            this.rowData = rowData;
+            this.data = data;
         }
         
         @Override
@@ -320,6 +377,8 @@ public class Main extends javax.swing.JFrame {
                                 path + "/" + filename));
                         ir.rawImage.setIcon(new ImageIcon(rawImage));
                         this.rowData.add(ir);
+                        this.data.add(new ImageData(
+                                path + "/" + filename, ent.getKey()));
                         
                         loadedFiles++;
                         int progress = (int)(((double)loadedFiles/
@@ -334,6 +393,58 @@ public class Main extends javax.swing.JFrame {
 
                 }
                 
+            }
+            
+            return null;
+        }
+        
+    }
+    
+    class RunGaborWorker extends SwingWorker {
+
+        private JPanel imagePanel;
+        private JProgressBar progressBar;
+        private List<ImageRow> rowData;
+        private List<ImageData> data;
+        private Mat kernel;
+        
+        public RunGaborWorker(Mat kernel, JPanel imagePanel, 
+                List<ImageData> data, List<ImageRow> rowData, 
+                JProgressBar progressBar) {
+            this.imagePanel = imagePanel;
+            this.progressBar = progressBar;
+            this.rowData = rowData;
+            this.data = data;
+            this.kernel = kernel;
+        }
+        
+        @Override
+        protected void done() {
+           
+            JOptionPane.showMessageDialog(null, 
+                    "All image successfully filtered", "Done", 
+                    JOptionPane.INFORMATION_MESSAGE);
+           for (int i = 0; i < this.data.size(); i++) {
+               ImageData id = this.data.get(i);
+               Image filteredImage = id.getBufferFilteredImg();
+               this.rowData.get(i).filteredImage
+                       .setIcon(new ImageIcon(filteredImage));
+           }
+            
+            repaint();
+        }
+        
+        @Override
+        protected Object doInBackground() throws Exception {
+            int loadedFiles = 0;
+            for (ImageData row : this.data) {
+                row.filterImg(this.kernel);
+                loadedFiles++;
+                int progress = (int)(((double)loadedFiles/
+                                (double)this.data.size()) * 100);
+                this.progressBar.setValue(progress);
+                this.progressBar.setString("Filtering Images " + 
+                        progress + "%");
             }
             
             return null;
@@ -378,8 +489,8 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField gammaField;
     private javax.swing.JPanel imageListPanel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -393,18 +504,18 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
-    private javax.swing.JSpinner jSpinner3;
-    private javax.swing.JSpinner jSpinner4;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
+    private javax.swing.JSpinner kernelHeightField;
+    private javax.swing.JSpinner kernelWidthField;
+    private javax.swing.JTextField lambdaField;
     private javax.swing.JButton loadImageButton;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JSpinner psiDegField;
+    private javax.swing.JButton runGaborButton;
+    private javax.swing.JTextField sigmaField;
+    private javax.swing.JSpinner thetaDegField;
     // End of variables declaration//GEN-END:variables
 }

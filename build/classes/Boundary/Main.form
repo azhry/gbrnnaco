@@ -147,15 +147,15 @@
                               <Component id="loadImageButton" pref="139" max="32767" attributes="0"/>
                               <Component id="progressBar" alignment="0" pref="0" max="32767" attributes="0"/>
                               <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jButton1" alignment="0" max="32767" attributes="0"/>
+                              <Component id="runGaborButton" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jTextField1" max="32767" attributes="0"/>
-                                      <Component id="jTextField2" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jTextField3" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jSpinner1" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jSpinner2" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="gammaField" max="32767" attributes="0"/>
+                                      <Component id="lambdaField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="sigmaField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="kernelWidthField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="kernelHeightField" alignment="0" max="32767" attributes="0"/>
                                       <Group type="102" attributes="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
@@ -168,8 +168,8 @@
                                           </Group>
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
-                                      <Component id="jSpinner3" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jSpinner4" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="psiDegField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="thetaDegField" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -184,33 +184,33 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jTextField1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="gammaField" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jTextField2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lambdaField" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jTextField3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="sigmaField" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jSpinner3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="psiDegField" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                                   <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jSpinner4" min="-2" max="-2" attributes="0"/>
+                                  <Component id="thetaDegField" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jSpinner1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="kernelWidthField" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jSpinner2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="kernelHeightField" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="runGaborButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="progressBar" min="-2" pref="24" max="-2" attributes="0"/>
                                   <EmptySpace pref="13" max="32767" attributes="0"/>
@@ -252,29 +252,41 @@
                             <Property name="text" type="java.lang.String" value="Gabor Parameters"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JButton" name="jButton1">
+                        <Component class="javax.swing.JButton" name="runGaborButton">
                           <Properties>
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                               <Image iconType="3" name="/Icon/icons8-play-24.png"/>
                             </Property>
                             <Property name="text" type="java.lang.String" value="Run Gabor"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="runGabor"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel2">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Gamma"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField1">
+                        <Component class="javax.swing.JTextField" name="gammaField">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="1.0"/>
+                          </Properties>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField2">
+                        <Component class="javax.swing.JTextField" name="lambdaField">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="4"/>
+                          </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel3">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Lambda"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField3">
+                        <Component class="javax.swing.JTextField" name="sigmaField">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="1.4"/>
+                          </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel4">
                           <Properties>
@@ -301,23 +313,28 @@
                             <Property name="text" type="java.lang.String" value="Kernel Height"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JSpinner" name="jSpinner1">
+                        <Component class="javax.swing.JSpinner" name="kernelWidthField">
                           <Properties>
                             <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="10" type="code"/>
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JSpinner" name="jSpinner2">
+                        <Component class="javax.swing.JSpinner" name="kernelHeightField">
                           <Properties>
                             <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="10" type="code"/>
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JSpinner" name="jSpinner3">
+                        <Component class="javax.swing.JSpinner" name="psiDegField">
                         </Component>
-                        <Component class="javax.swing.JSpinner" name="jSpinner4">
+                        <Component class="javax.swing.JSpinner" name="thetaDegField">
+                          <Properties>
+                            <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="135" type="code"/>
+                            </Property>
+                          </Properties>
                         </Component>
                       </SubComponents>
                     </Container>
