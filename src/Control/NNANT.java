@@ -5,7 +5,7 @@
  */
 package Control;
 
-import Entity.Image;
+import Entity.ImageData;
 import NeuralNetwork.NeuralNetwork;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,13 +67,13 @@ public class NNANT {
         
         List<double[]> features = new ArrayList<>();
         List<double[]> classes = new ArrayList<>();
-        List<Image> images = new ArrayList<>();
+        List<ImageData> images = new ArrayList<>();
         Mat kernel = Imgproc.getGaborKernel(ksize, sigma, theta, lambda, gamma);
         for (Map.Entry<String, List<String>> ent: 
                 FileHandler.LABELS.entrySet()) {
             String path = "data/" + ent.getKey();
             for (String filename : ent.getValue()) {
-                Image img = new Image(path + "/" + filename, kernel, 
+                ImageData img = new ImageData(path + "/" + filename, kernel, 
                         ent.getKey());
                 images.add(img);
                 
@@ -81,7 +81,7 @@ public class NNANT {
         }
         
         Collections.shuffle(images);
-        for (Image img : images) {
+        for (ImageData img : images) {
             features.add(img.getFilteredData());
             classes.add(encodedLabels.get(img.getLabel()));
         }

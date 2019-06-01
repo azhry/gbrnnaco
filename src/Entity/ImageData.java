@@ -5,6 +5,8 @@
  */
 package Entity;
 
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -14,17 +16,21 @@ import org.opencv.imgproc.Imgproc;
  *
  * @author Azhary Arliansyah
  */
-public class Image {
+public class ImageData {
     
+    private final BufferedImage rawImg;
     private final Mat img;
-    private final Mat grayImg;
-    private final Mat filteredImg;
-    private final double[] filteredData;
+    
+    private Mat grayImg;
+    private Mat filteredImg;
+    private double[] filteredData;
     private String label;
     
-    public Image(String path, Mat kernel, String label) {
+    public ImageData(String path, Mat kernel, String label) {
         this.label = label;
         this.img = Imgcodecs.imread(path);
+        this.rawImg = new BufferedImage(this.img.width(), this.img.height(), 
+                BufferedImage.TYPE_INT_ARGB);
         this.grayImg = new Mat(this.img.rows(), this.img.cols(), 
                 CvType.CV_8UC1);
         Imgproc.cvtColor(this.img, this.grayImg, Imgproc.COLOR_RGB2GRAY);
@@ -47,8 +53,20 @@ public class Image {
         }
     }
     
+    public ImageData(String path, String label) {
+        this.label = label;
+        System.out.println(path);
+        this.img = Imgcodecs.imread(path);
+        this.rawImg = new BufferedImage(this.img.width(), this.img.height(), 
+                BufferedImage.TYPE_INT_ARGB);
+    }
+    
     public Mat getImg() {
         return this.img;
+    }
+    
+    public BufferedImage getRawImg() {
+        return this.rawImg;
     }
     
     public Mat getGrayImg() {

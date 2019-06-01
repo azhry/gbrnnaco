@@ -17,12 +17,13 @@ import java.util.Map;
  */
 public class FileHandler {
     
-    private static final String BASE_DIR = System.getProperty("user.dir");
     private static String CURRENT_DIR;
+    public static int NUM_FILES;
     public static Map<String, List<String>> LABELS = new HashMap<>();
     
+    
     public static File[] readDirectoryContent(String path) {
-        final File directory = new File(FileHandler.BASE_DIR + "/" + path);
+        final File directory = new File(path);
         return directory.listFiles();
     }
     
@@ -41,13 +42,14 @@ public class FileHandler {
                         FileHandler.CURRENT_DIR);
                 filenames.add(entry.getName());
                 FileHandler.LABELS.put(FileHandler.CURRENT_DIR, filenames);
-//                System.out.println(entry.getName());
+                FileHandler.NUM_FILES++;
             }
         }
         
     }
     
     public static void read(String path) {
+        FileHandler.NUM_FILES = 0;
         FileHandler.LABELS = new HashMap<>();
         FileHandler.readRecursive(path);
     }
