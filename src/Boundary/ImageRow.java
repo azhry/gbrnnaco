@@ -48,12 +48,12 @@ public class ImageRow extends javax.swing.JPanel {
 
         rawImage.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         rawImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        rawImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/setting.png"))); // NOI18N
+        rawImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/icons8-picture-32.png"))); // NOI18N
         jPanel5.add(rawImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 0, 160, 120));
 
         filteredImage.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         filteredImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        filteredImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/setting.png"))); // NOI18N
+        filteredImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/icons8-picture-32.png"))); // NOI18N
         jPanel5.add(filteredImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 0, 160, 120));
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N

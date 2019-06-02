@@ -7,9 +7,19 @@ package NeuralNetwork;
 
 import NeuralNetwork.Neuron.Type;
 import Control.MathFx;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JProgressBar;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.json.simple.JSONObject;
 
 /**
@@ -18,8 +28,8 @@ import org.json.simple.JSONObject;
  */
 public class NeuralNetwork {
     
-    private final double learningRate = 0.01;
-    private final int EPOCH = 5;
+    private final double learningRate;
+    private final int EPOCH;
     
     private final int numInputNeuron;
     private final int numHiddenNeuron1;
@@ -44,11 +54,15 @@ public class NeuralNetwork {
     private double[][] target;
     
     private double loss;
+    private List<Double> epochLoss;
     
     public NeuralNetwork(double[][] data, double[][] target, 
-            int numHiddens) {
+            int numHiddens, double learningRate, int epoch) {
         this.data = data;
         this.target = target;
+        
+        this.learningRate = learningRate;
+        this.EPOCH = epoch;
         
         this.numInputNeuron = this.data[0].length;
         this.numHiddenNeuron1 = numHiddens;
@@ -109,6 +123,108 @@ public class NeuralNetwork {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void saveWeight(JProgressBar progressBar) {
+        progressBar.setString("Saving weights....");
+        JSONObject inputHidden1Weights = new JSONObject();
+        for (int i = 0; i < this.inputHidden1Connections.length; i++) {
+            JSONObject rows = new JSONObject();
+            for (int j = 0; j < this.inputHidden1Connections[i].length; j++) {
+                rows.put(j, this.inputHidden1Connections[i][j]);
+            }
+            inputHidden1Weights.put(i, rows);
+        }
+        
+        JSONObject hidden1Hidden2Weights = new JSONObject();
+        for (int i = 0; i < this.hidden1Hidden2Connections.length; i++) {
+            JSONObject rows = new JSONObject();
+            for (int j = 0; j < this.hidden1Hidden2Connections[i].length; j++) {
+                rows.put(j, this.hidden1Hidden2Connections[i][j]);
+            }
+            hidden1Hidden2Weights.put(i, rows);
+        }
+        
+        JSONObject hidden2OutputWeights = new JSONObject();
+        for (int i = 0; i < this.hidden2OutputConnections.length; i++) {
+            JSONObject rows = new JSONObject();
+            for (int j = 0; j < this.hidden2OutputConnections[i].length; j++) {
+                rows.put(j, this.hidden2OutputConnections[i][j]);
+            }
+            hidden2OutputWeights.put(i, rows);
+        }
+        
+        try {
+            FileWriter writer = new FileWriter("InputHidden1Weights.json");
+            writer.write(inputHidden1Weights.toJSONString());
+            writer.flush();
+            
+            writer = new FileWriter("Hidden1Hidden2Weights.json");
+            writer.write(hidden1Hidden2Weights.toJSONString());
+            writer.flush();
+            
+            writer = new FileWriter("Hidden2OutputWeights.json");
+            writer.write(hidden2OutputWeights.toJSONString());
+            writer.flush();
+            
+            progressBar.setString("Weights Saved");
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void displayLossChart(javax.swing.JLabel lossChart) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (int i = 0; i < this.epochLoss.size(); i++) {
+            dataset.addValue(this.epochLoss.get(i), "Loss", 
+                    String.valueOf((i + 1)));
+        }
+        JFreeChart chart = ChartFactory.createLineChart(
+                "Error / Loss Overtime",
+                "Time", "Loss",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true, true, false
+        );
+        
+        BufferedImage imageChart = chart.createBufferedImage(
+                lossChart.getWidth(), lossChart.getHeight());
+        Image im = imageChart;
+        lossChart.setIcon(new ImageIcon(im));
+        
+    }
+    
+    public void fit(JProgressBar progressBar, 
+            javax.swing.JLabel neuralNetworkLossChart) {
+        this.epochLoss = new ArrayList<>();
+        int progress = 0;
+        int currentProgress = 0;
+        int maxProgress = this.EPOCH * this.data.length;
+        for (int e = 0; e < this.EPOCH; e++) {
+            for (int i = 0; i < this.data.length; i++) {
+                this.feedforward(this.data[i]);
+                this.loss = this.calculateLoss(this.target[i]);
+                this.epochLoss.add(this.loss);
+                
+                this.backpropagation(this.target[i]);
+                currentProgress++;
+                progress = (int)(((double)currentProgress / 
+                        (double)maxProgress) * 100);
+                progressBar.setValue(progress);
+                progressBar.setString(progress + "%");
+                
+                this.displayLossChart(neuralNetworkLossChart);
+            }
+            
+            
+            for (double[] w : this.hidden1Hidden2Connections) {
+                System.out.println(Arrays.toString(w));
+            }
+            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.loss);
+        }
+    
+        this.saveWeight(progressBar);
     }
     
     public void fit() {

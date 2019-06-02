@@ -95,7 +95,7 @@ public class NNANT {
         }
         
         NeuralNetwork nn = new NeuralNetwork(finalFeatures, finalClasses, 
-                labels.length + 2);
+                labels.length + 2, 0.01, 10);
         nn.fit();
         
 //        Mat mat1 = new Mat(image.rows(), image.cols(), CvType.CV_8UC1);
