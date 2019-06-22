@@ -5,7 +5,6 @@
  */
 package NeuralNetwork;
 
-import java.util.Arrays;
 
 /**
  *
@@ -20,6 +19,14 @@ public class Activation {
     public static double sigmoidDerivative(double n) {
         double sigmoid = Activation.sigmoid(n);
         return sigmoid * (1.0 - sigmoid);
+    }
+    
+    public static double[] sigmoidDerivatives(double[] n) {
+        double[] results = new double[n.length];
+        for (int i = 0; i < n.length; i++) {
+            results[i] = Activation.sigmoidDerivative(n[i]);
+        }
+        return results;
     }
     
     public static double[] softmax(double[] n) {

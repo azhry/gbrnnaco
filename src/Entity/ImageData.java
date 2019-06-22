@@ -28,7 +28,9 @@ public class ImageData {
     
     private Mat grayImg;
     private Mat filteredImg;
+    private Mat rawImgData;
     private double[] filteredData;
+    private double[] data;
     private String label;
     
     public ImageData(String path, Mat kernel, String label) {
@@ -63,6 +65,25 @@ public class ImageData {
         this.img = Imgcodecs.imread(path);
         this.rawImg = new BufferedImage(this.img.width(), this.img.height(), 
                 BufferedImage.TYPE_INT_ARGB);
+        
+        this.grayImg = new Mat(this.img.rows(), this.img.cols(), 
+                CvType.CV_8UC1);
+        Imgproc.cvtColor(this.img, this.grayImg, Imgproc.COLOR_RGB2GRAY);
+        
+        this.rawImgData = new Mat(this.grayImg.rows(), this.grayImg.cols(), 
+                this.img.type());
+        
+        this.data = new double[this.rawImgData.rows() * 
+                this.rawImgData.cols() * this.rawImgData.channels()];
+        int i = 0;
+        for (int j = 0; j < this.rawImgData.rows(); j++) {
+            for (int k = 0; k < this.rawImgData.cols(); k++) {
+                for (int l = 0; l < this.rawImgData.channels(); l++) {
+                    this.data[i] = this.rawImgData.get(j, k)[l];
+                    i++;
+                } 
+            }
+        }
     }
     
     public void filterImg(Mat kernel) {
@@ -125,6 +146,10 @@ public class ImageData {
     
     public double[] getFilteredData() {
         return this.filteredData;
+    }
+    
+    public double[] getData() {
+        return this.data;
     }
     
     public String getLabel() {

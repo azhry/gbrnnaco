@@ -105,6 +105,30 @@ public class MathFx {
         return lowest;
     }
     
+    public static int maxIndex(List<Double> list) {
+        double highest = Integer.MIN_VALUE;
+        int maxIndex = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) > highest) {
+                highest = list.get(i);
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
+    }
+    
+    public static int maxIndex(double[] list) {
+        double highest = Integer.MIN_VALUE;
+        int maxIndex = 0;
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] > highest) {
+                highest = list[i];
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
+    }
+    
     public static int sum(List<Integer> list) {
         int total = 0;
         for (int x : list) {

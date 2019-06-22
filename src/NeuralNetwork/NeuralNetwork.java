@@ -5,15 +5,21 @@
  */
 package NeuralNetwork;
 
+import Boundary.OutputNeuronLog;
 import NeuralNetwork.Neuron.Type;
 import Control.MathFx;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
 import org.jfree.chart.ChartFactory;
@@ -21,6 +27,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -50,10 +58,10 @@ public class NeuralNetwork {
     private double[] deltaHidden2;
     
     private double[] crossEntropyDerivatives;
-    private double[][] data;
-    private double[][] target;
+    private final double[][] data;
+    private final double[][] target;
     
-    private double loss;
+    private double error;
     private List<Double> epochLoss;
     
     public NeuralNetwork(double[][] data, double[][] target, 
@@ -79,29 +87,85 @@ public class NeuralNetwork {
         this.initializeHidden2OutputConnections();
     }
     
+    public void loadWeight() {
+        try {
+                
+            JSONObject inputHidden1Weights = (JSONObject)new JSONParser()
+                        .parse(new FileReader("InputHidden1Weights.json"));
+            int numRows = inputHidden1Weights.size();
+            int numCols = ((JSONObject)inputHidden1Weights.get("0")).size();
+            System.out.println(this.inputHidden1Connections.length);
+            System.out.println(this.inputHidden1Connections[0].length);
+            System.out.println(numRows + ", " + numCols);
+            for (int i = 0; i < numRows; i++) {
+                numCols = ((JSONObject)inputHidden1Weights.get(String.valueOf(i))).size();
+                System.out.println(numCols);
+                for (int j = 0; j < numCols; j++) {
+                    this.inputHidden1Connections[i][j] = 
+                            (double)((JSONObject)(inputHidden1Weights
+                                    .get(String.valueOf(i))))
+                                    .get(String.valueOf(j));
+                }
+            }
+            
+            JSONObject hidden1Hidden2Weights = (JSONObject)new JSONParser()
+                        .parse(new FileReader("Hidden1Hidden2Weights.json"));
+            numRows = hidden1Hidden2Weights.size();
+            numCols = ((JSONObject)hidden1Hidden2Weights.get("0")).size();
+            for (int i = 0; i < numRows; i++) {
+                for (int j = 0; j < numCols; j++) {
+                    this.hidden1Hidden2Connections[i][j] = 
+                            (double)((JSONObject)hidden1Hidden2Weights
+                                    .get(String.valueOf(i)))
+                                    .get(String.valueOf(j));
+                }
+            }
+            
+            JSONObject hidden2OutputWeights = (JSONObject)new JSONParser()
+                        .parse(new FileReader("Hidden2OutputWeights.json"));
+            numRows = hidden2OutputWeights.size();
+            numCols = ((JSONObject)hidden2OutputWeights.get("0")).size();
+            for (int i = 0; i < numRows; i++) {
+                for (int j = 0; j < numCols; j++) {
+                    this.hidden2OutputConnections[i][j] = 
+                            (double)((JSONObject)hidden2OutputWeights
+                                    .get(String.valueOf(i)))
+                                    .get(String.valueOf(j));
+                }
+            }
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void saveWeight() {
         JSONObject inputHidden1Weights = new JSONObject();
-        for (int i = 0; i < this.inputHidden1Connections.length; i++) {
+        for (int i = 0; i < this.numHiddenNeuron1; i++) {
             JSONObject rows = new JSONObject();
-            for (int j = 0; j < this.inputHidden1Connections[i].length; j++) {
+            for (int j = 0; j < this.numInputNeuron; j++) {
                 rows.put(j, this.inputHidden1Connections[i][j]);
             }
             inputHidden1Weights.put(i, rows);
         }
         
         JSONObject hidden1Hidden2Weights = new JSONObject();
-        for (int i = 0; i < this.hidden1Hidden2Connections.length; i++) {
+        for (int i = 0; i < this.numHiddenNeuron2; i++) {
             JSONObject rows = new JSONObject();
-            for (int j = 0; j < this.hidden1Hidden2Connections[i].length; j++) {
+            for (int j = 0; j < this.numHiddenNeuron1; j++) {
                 rows.put(j, this.hidden1Hidden2Connections[i][j]);
             }
             hidden1Hidden2Weights.put(i, rows);
         }
         
         JSONObject hidden2OutputWeights = new JSONObject();
-        for (int i = 0; i < this.hidden2OutputConnections.length; i++) {
+        for (int i = 0; i < this.numOutputNeuron; i++) {
             JSONObject rows = new JSONObject();
-            for (int j = 0; j < this.hidden2OutputConnections[i].length; j++) {
+            for (int j = 0; j < this.numHiddenNeuron2; j++) {
                 rows.put(j, this.hidden2OutputConnections[i][j]);
             }
             hidden2OutputWeights.put(i, rows);
@@ -128,27 +192,27 @@ public class NeuralNetwork {
     public void saveWeight(JProgressBar progressBar) {
         progressBar.setString("Saving weights....");
         JSONObject inputHidden1Weights = new JSONObject();
-        for (int i = 0; i < this.inputHidden1Connections.length; i++) {
+        for (int i = 0; i < this.numHiddenNeuron1; i++) {
             JSONObject rows = new JSONObject();
-            for (int j = 0; j < this.inputHidden1Connections[i].length; j++) {
+            for (int j = 0; j < this.numInputNeuron; j++) {
                 rows.put(j, this.inputHidden1Connections[i][j]);
             }
             inputHidden1Weights.put(i, rows);
         }
         
         JSONObject hidden1Hidden2Weights = new JSONObject();
-        for (int i = 0; i < this.hidden1Hidden2Connections.length; i++) {
+        for (int i = 0; i < this.numHiddenNeuron2; i++) {
             JSONObject rows = new JSONObject();
-            for (int j = 0; j < this.hidden1Hidden2Connections[i].length; j++) {
+            for (int j = 0; j < this.numHiddenNeuron1; j++) {
                 rows.put(j, this.hidden1Hidden2Connections[i][j]);
             }
             hidden1Hidden2Weights.put(i, rows);
         }
         
         JSONObject hidden2OutputWeights = new JSONObject();
-        for (int i = 0; i < this.hidden2OutputConnections.length; i++) {
+        for (int i = 0; i < this.numOutputNeuron; i++) {
             JSONObject rows = new JSONObject();
-            for (int j = 0; j < this.hidden2OutputConnections[i].length; j++) {
+            for (int j = 0; j < this.numHiddenNeuron2; j++) {
                 rows.put(j, this.hidden2OutputConnections[i][j]);
             }
             hidden2OutputWeights.put(i, rows);
@@ -196,16 +260,48 @@ public class NeuralNetwork {
     }
     
     public void fit(JProgressBar progressBar, 
-            javax.swing.JLabel neuralNetworkLossChart) {
+            javax.swing.JLabel neuralNetworkLossChart, 
+            List<OutputNeuronLog> logs, 
+            javax.swing.JLabel classifiedRatioText) {
         this.epochLoss = new ArrayList<>();
         int progress = 0;
         int currentProgress = 0;
         int maxProgress = this.EPOCH * this.data.length;
+        int corrects = 0;
+        int incorrects = 0;
         for (int e = 0; e < this.EPOCH; e++) {
             for (int i = 0; i < this.data.length; i++) {
                 this.feedforward(this.data[i]);
-                this.loss = this.calculateLoss(this.target[i]);
-                this.epochLoss.add(this.loss);
+                
+                List<Double> outputNeuronValues = new ArrayList<>();
+                for (int j = 0; j < this.numOutputNeuron; j++) {
+                    logs.get(j).valueText
+                            .setText(String.valueOf(
+                                    this.outputNeurons[j].getMappedValue()));
+                    logs.get(j).setBackground(Color.WHITE);
+                    outputNeuronValues
+                            .add(this.outputNeurons[j].getMappedValue());
+                }
+                int maxPredictedIndex = MathFx.maxIndex(outputNeuronValues);
+                List<Double> listTarget = new ArrayList<>();
+                for (double t : this.target[i]) {
+                    listTarget.add(t);
+                }
+                int maxActualIndex = MathFx.maxIndex(listTarget);
+                if (maxActualIndex == maxPredictedIndex) {
+                    logs.get(maxPredictedIndex)
+                        .setBackground(Color.GREEN);
+                    corrects++;
+                }
+                else {
+                    logs.get(maxPredictedIndex)
+                        .setBackground(Color.RED);
+                    incorrects++;
+                }
+                
+                classifiedRatioText.setText(corrects + "/" + incorrects);
+                this.error = this.calculateError(this.target[i]);
+                this.epochLoss.add(this.error);
                 
                 this.backpropagation(this.target[i]);
                 currentProgress++;
@@ -221,7 +317,7 @@ public class NeuralNetwork {
             for (double[] w : this.hidden1Hidden2Connections) {
                 System.out.println(Arrays.toString(w));
             }
-            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.loss);
+            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
         }
     
         this.saveWeight(progressBar);
@@ -231,21 +327,32 @@ public class NeuralNetwork {
         for (int e = 0; e < this.EPOCH; e++) {
             for (int i = 0; i < this.data.length; i++) {
                 this.feedforward(this.data[i]);
-                this.loss = this.calculateLoss(this.target[i]);
+                
+                this.error = this.calculateError(this.target[i]);
                 this.backpropagation(this.target[i]);
             }
             
             for (double[] w : this.hidden1Hidden2Connections) {
                 System.out.println(Arrays.toString(w));
             }
-            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.loss);
+            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
         }
         
         this.saveWeight();
     }
     
     public void predict(double[][] data) {
+        this.loadWeight();
+        double[] predicted = new double[this.numOutputNeuron];
         
+        for (double[] row : data) {
+            this.feedforward(row);
+            for (int i = 0; i < this.numOutputNeuron; i++) {
+                predicted[i] = this.outputNeurons[i].getMappedValue();
+            }
+            
+            System.out.println(Arrays.toString(predicted));
+        }
     }
     
     private void feedforward(double[] data) {
@@ -264,27 +371,96 @@ public class NeuralNetwork {
         this.crossEntropyDerivatives = new double[this.numOutputNeuron];
         double[] outputNeuronValues = new double[this.numOutputNeuron];
         for (int i = 0; i < this.numOutputNeuron; i++) {
-            this.crossEntropyDerivatives[i] = 
-                    Loss.crossEntropyDerivative(actual[i], 
-                            this.outputNeurons[i].getMappedValue());
+//            this.crossEntropyDerivatives[i] = 
+//                    Loss.crossEntropyDerivative(actual[i], 
+//                            this.outputNeurons[i].getMappedValue());
             outputNeuronValues[i] = this.outputNeurons[i].getValue();
         }
         
-        double[] softmaxDerivatives = 
-                Activation.softmaxDerivative(outputNeuronValues);
-        
-        for (int i = 0; i < this.numHiddenNeuron2; i++) {
-            this.deltaHidden2[i] = 0.0;
-            for (int j = 0; j < this.numOutputNeuron; j++) {
-                this.deltaHidden2[i] += this.crossEntropyDerivatives[j] * 
-                        softmaxDerivatives[j] * 
-                        this.hiddenNeurons2[i].getMappedValue();
-                this.hidden2OutputConnections[j][i] += (this.learningRate * 
-                        this.crossEntropyDerivatives[j] * 
-                        softmaxDerivatives[j]);
+        double[] a3_delta = Loss.crossEntropy2(actual, outputNeuronValues);
+        double[] z2_delta = new double[this.numHiddenNeuron2];
+        for (int j = 0; j < this.hidden2OutputConnections[0].length; j++) {
+            for (int k = 0; k < this.hidden2OutputConnections.length; k++) {
+
+                z2_delta[j] += a3_delta[k] * 
+                        this.hidden2OutputConnections[k][j];
+
             }
-            
         }
+        
+        for (int i = 0; i < this.hidden2OutputConnections.length; i++) {
+            for (int j = 0; j < this.hidden2OutputConnections[i].length; j++) {
+                
+                this.hidden2OutputConnections[i][j] += 
+                        this.learningRate * a3_delta[i] 
+                        * this.hiddenNeurons2[j].getMappedValue();
+                
+            }
+        }
+        
+        double[] hidden2NeuronValues = new double[this.numHiddenNeuron2];
+        for (int i = 0; i < this.numHiddenNeuron2; i++) {
+            hidden2NeuronValues[i] = this.hiddenNeurons2[i].getMappedValue();
+        }
+        double[] a2_delta = Activation.sigmoidDerivatives(hidden2NeuronValues);
+        for (int i = 0; i < a2_delta.length; i++) {
+            a2_delta[i] = a2_delta[i] * z2_delta[i];
+        }
+        
+        double[] z1_delta = new double[this.numHiddenNeuron1];
+        for (int i = 0; i < this.hidden1Hidden2Connections[0].length; i++) {
+            for (int j = 0; j < this.hidden1Hidden2Connections.length; j++) {
+             
+                z1_delta[i] += a2_delta[j] * 
+                        this.hidden1Hidden2Connections[j][i];
+                
+            }
+        }
+        
+        for (int i = 0; i < this.hidden1Hidden2Connections.length; i++) {
+            for (int j = 0; j < this.hidden1Hidden2Connections[i].length; j++) {
+                
+                this.hidden1Hidden2Connections[i][j] += 
+                        this.learningRate * a2_delta[i] * 
+                        this.hiddenNeurons1[j].getMappedValue();
+                
+            }
+        }
+        
+        double[] hidden1NeuronValues = new double[this.numHiddenNeuron1];
+        for (int i = 0; i < this.numHiddenNeuron1; i++) {
+            hidden1NeuronValues[i] = this.hiddenNeurons1[i].getMappedValue();
+        }
+        
+        double[] a1_delta = Activation.sigmoidDerivatives(hidden1NeuronValues);
+        for (int i = 0; i < a1_delta.length; i++) {
+            a1_delta[i] = a1_delta[i] * z1_delta[i];
+        }
+        
+        for (int i = 0; i < this.inputHidden1Connections.length; i++) {
+            for (int j = 0; j < this.inputHidden1Connections[i].length; j++) {
+                
+                this.inputHidden1Connections[i][j] += 
+                        this.learningRate * a1_delta[i] *
+                        this.inputNeurons[j].getValue();
+                
+            }
+        }
+//        double[] softmaxDerivatives = 
+//                Activation.softmaxDerivative(outputNeuronValues);
+//        
+//        for (int i = 0; i < this.numHiddenNeuron2; i++) {
+//            this.deltaHidden2[i] = 0.0;
+//            for (int j = 0; j < this.numOutputNeuron; j++) {
+//                this.deltaHidden2[i] += this.crossEntropyDerivatives[j] * 
+//                        softmaxDerivatives[j] * 
+//                        this.hiddenNeurons2[i].getMappedValue();
+//                this.hidden2OutputConnections[j][i] += (this.learningRate * 
+//                        this.crossEntropyDerivatives[j] * 
+//                        softmaxDerivatives[j]);
+//            }
+//            
+//        }
         
 //        for (int i = 0; i < this.numOutputNeuron; i++) {
 //            for (int j = 0; j < this.numHiddenNeuron2; j++) {
@@ -300,22 +476,22 @@ public class NeuralNetwork {
     private void calculateHidden2Hidden1() {
 //        double[] sigmoidDerivatives = new double[this.numHiddenNeuron2];
         
-        for (int i = 0; i < this.numHiddenNeuron1; i++) {
-            this.deltaHidden1[i] = 0.0;
-            for (int j = 0; j < this.numHiddenNeuron2; j++) {
-                double sigmoidDerivatives = 
-                    Activation.sigmoidDerivative(
-                            this.hiddenNeurons2[j].getValue());
-                
-                this.deltaHidden1[i] += this.deltaHidden2[j] * 
-                        this.hiddenNeurons1[i].getMappedValue() * 
-                        sigmoidDerivatives;
-                
-                this.hidden1Hidden2Connections[j][i] += (this.learningRate * 
-                        this.deltaHidden2[j] * 
-                        sigmoidDerivatives);
-            }
-        }
+//        for (int i = 0; i < this.numHiddenNeuron1; i++) {
+//            this.deltaHidden1[i] = 0.0;
+//            for (int j = 0; j < this.numHiddenNeuron2; j++) {
+//                double sigmoidDerivatives = 
+//                    Activation.sigmoidDerivative(
+//                            this.hiddenNeurons2[j].getValue());
+//                
+//                this.deltaHidden1[i] += this.deltaHidden2[j] * 
+//                        this.hiddenNeurons1[i].getMappedValue() * 
+//                        sigmoidDerivatives;
+//                
+//                this.hidden1Hidden2Connections[j][i] += (this.learningRate * 
+//                        this.deltaHidden2[j] * 
+//                        sigmoidDerivatives);
+//            }
+//        }
         
         
 //        for (int i = 0; i < this.numHiddenNeuron2; i++) {
@@ -335,22 +511,22 @@ public class NeuralNetwork {
     }
     
     private void calculateHidden1Input() {
-        for (int i = 0; i < this.numInputNeuron; i++) {
-            this.deltaInput[i] = 0.0;
-            for (int j = 0; j < this.numHiddenNeuron1; j++) {
-                double sigmoidDerivatives = 
-                    Activation.sigmoidDerivative(
-                            this.hiddenNeurons1[j].getValue());
-                
-                this.deltaInput[i] += this.deltaHidden1[j] * 
-                        this.inputNeurons[i].getMappedValue() * 
-                        sigmoidDerivatives;
-                
-                this.inputHidden1Connections[j][i] += (this.learningRate * 
-                        this.deltaHidden1[j] * 
-                        sigmoidDerivatives);
-            }
-        }
+//        for (int i = 0; i < this.numInputNeuron; i++) {
+//            this.deltaInput[i] = 0.0;
+//            for (int j = 0; j < this.numHiddenNeuron1; j++) {
+//                double sigmoidDerivatives = 
+//                    Activation.sigmoidDerivative(
+//                            this.hiddenNeurons1[j].getValue());
+//                
+//                this.deltaInput[i] += this.deltaHidden1[j] * 
+//                        this.inputNeurons[i].getMappedValue() * 
+//                        sigmoidDerivatives;
+//                
+//                this.inputHidden1Connections[j][i] += (this.learningRate * 
+//                        this.deltaHidden1[j] * 
+//                        sigmoidDerivatives);
+//            }
+//        }
         
 //        double[] sigmoidDerivatives = new double[this.numHiddenNeuron1];
 //        for (int i = 0; i < this.numHiddenNeuron1; i++) {
@@ -369,12 +545,12 @@ public class NeuralNetwork {
 //        }
     }
     
-    private double calculateLoss(double[] actual) {
+    private double calculateError(double[] actual) {
         double[] predicted = new double[this.numOutputNeuron];
         for (int i = 0; i < this.numOutputNeuron; i++) {
             predicted[i] = this.outputNeurons[i].getMappedValue();
         }
-        return Loss.crossEntropy(actual, predicted);
+        return Loss.error(actual, predicted);
     }
     
     private void calculateInputHidden1(double[] data) {
@@ -390,7 +566,6 @@ public class NeuralNetwork {
                         this.inputNeurons[j].getValue());
             }
             double mappedValue = Activation.sigmoid(totalInputValue + bias);
-//            System.out.println(mappedValue);
             this.hiddenNeurons1[i].setValue(totalInputValue + bias);
             this.hiddenNeurons1[i].setMappedValue(mappedValue);
         }
