@@ -37,9 +37,6 @@ public class Loss {
     public static double error(double[] actual, double[] predicted) {
         double error = 0.0;
         int actualIndex = MathFx.maxIndex(actual);
-//        for (int i = 0; i < actual.length; i++) {
-//            error += Math.pow(predicted[i] - actual[i], 2);
-//        }
         return - Math.log(predicted[actualIndex]) / (double)actual.length;
     }
     

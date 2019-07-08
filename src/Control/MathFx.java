@@ -21,7 +21,11 @@ import java.util.Set;
 public class MathFx {
     
     public static int sumMap(Map<String, Integer> map) {
-        return map.values().stream().mapToInt(x -> x).sum();
+        int total = 0;
+        for (Map.Entry<String, Integer> e : map.entrySet()) {
+            total += e.getValue();
+        }
+        return total;
     }
     
     public static double randUniform(int n) {
@@ -33,8 +37,8 @@ public class MathFx {
         return rand.nextInt(range + 1);
     }
     
-    public static Double euclideanDistance(List<Integer> x1, 
-            List<Integer> x2) {
+    public static Double euclideanDistance(List<? extends Number> x1, 
+            List<? extends Number> x2) {
         Double result = 0.00;
         if (x1.size() != x2.size()) {
             throw new Error("You should pass two lists of same size");
@@ -44,15 +48,15 @@ public class MathFx {
         Iterator x2Iterator = x2.iterator();
         
         while (x1Iterator.hasNext() && x2Iterator.hasNext()) {
-            result += Math.pow((int)x1Iterator.next() -
-                    (int)x2Iterator.next(), 2);
+            result += Math.pow((double)x1Iterator.next() -
+                    (double)x2Iterator.next(), 2);
         }
 
         return Math.sqrt(result);
     }
     
     public static List<Map.Entry<Integer, Double>> sortMap(
-            Map<Integer, Double> map, String order) {
+            Map<Integer, Double> map, final String order) {
         Set<Map.Entry<Integer, Double>> set = map.entrySet();
         List<Map.Entry<Integer, Double>> list = new ArrayList<Map.Entry<
                 Integer, Double>>(set);
@@ -74,7 +78,7 @@ public class MathFx {
     }
     
     public static List<Map.Entry<String, Double>> sortMapDouble(
-            Map<String, Double> map, String order) {
+            Map<String, Double> map, final String order) {
         Set<Map.Entry<String, Double>> set = map.entrySet();
         List<Map.Entry<String, Double>> list = new ArrayList<Map.Entry<
                 String, Double>>(set);
@@ -132,6 +136,14 @@ public class MathFx {
     public static int sum(List<Integer> list) {
         int total = 0;
         for (int x : list) {
+            total += x;
+        }
+        return total;
+    }
+    
+    public static double sum(ArrayList<Double> arr) {
+        double total = 0;
+        for (double x : arr) {
             total += x;
         }
         return total;

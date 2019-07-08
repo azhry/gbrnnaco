@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
+import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
@@ -60,14 +61,34 @@ public class NeuralNetwork {
     private double[] crossEntropyDerivatives;
     private final double[][] data;
     private final double[][] target;
+    private final double[][] testData;
+    private final double[][] testTarget;
     
     private double error;
     private List<Double> epochLoss;
     
     public NeuralNetwork(double[][] data, double[][] target, 
-            int numHiddens, double learningRate, int epoch) {
-        this.data = data;
-        this.target = target;
+            int numHiddens, double learningRate, int epoch, double splitRatio) {
+        int numData = data.length;
+        this.data = new double[(int)(numData * splitRatio)][data[0].length];
+        this.target = new double[(int)(numData * splitRatio)][target[0].length];
+        
+        this.testData = new double
+                [numData - (int)(numData * splitRatio)][data[0].length];
+        this.testTarget = new double
+                [numData - (int)(numData * splitRatio)][target[0].length];
+        
+        for (int i = 0; i < numData; i++) {
+            
+            if (i >= (int)(numData * splitRatio)) {
+                this.testData[i - (int)(numData * splitRatio)] = data[i];
+                this.testTarget[i - (int)(numData * splitRatio)] = target[i];
+            }
+            else {
+                this.data[i] = data[i];
+                this.target[i] = target[i];
+            }
+        }
         
         this.learningRate = learningRate;
         this.EPOCH = epoch;
@@ -87,6 +108,30 @@ public class NeuralNetwork {
         this.initializeHidden2OutputConnections();
     }
     
+    public NeuralNetwork(double[][] data, double[][] target, int numHiddens) {
+        this.numInputNeuron = data[0].length;
+        this.numHiddenNeuron1 = numHiddens;
+        this.numHiddenNeuron2 = numHiddens;
+        this.numOutputNeuron = target[0].length;
+        this.learningRate = 0.0;
+        this.EPOCH = 0;
+        this.data = data;
+        this.target = target;
+        this.testData = data;
+        this.testTarget = target;
+        
+        this.initializeInputNeurons();
+        this.initializeHiddenNeurons1();
+        this.initializeHiddenNeurons2();
+        this.initializeOutputNeurons();
+    
+        this.initializeInputHidden1Connections();
+        this.initializeHidden1Hidden2Connections();
+        this.initializeHidden2OutputConnections();
+        
+        
+    }
+    
     public void loadWeight() {
         try {
                 
@@ -94,12 +139,9 @@ public class NeuralNetwork {
                         .parse(new FileReader("InputHidden1Weights.json"));
             int numRows = inputHidden1Weights.size();
             int numCols = ((JSONObject)inputHidden1Weights.get("0")).size();
-            System.out.println(this.inputHidden1Connections.length);
-            System.out.println(this.inputHidden1Connections[0].length);
-            System.out.println(numRows + ", " + numCols);
+
             for (int i = 0; i < numRows; i++) {
                 numCols = ((JSONObject)inputHidden1Weights.get(String.valueOf(i))).size();
-                System.out.println(numCols);
                 for (int j = 0; j < numCols; j++) {
                     this.inputHidden1Connections[i][j] = 
                             (double)((JSONObject)(inputHidden1Weights
@@ -142,6 +184,60 @@ public class NeuralNetwork {
             Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void loadWeightOpt() {
+        try {
+                
+            JSONObject inputHidden1Weights = (JSONObject)new JSONParser()
+                        .parse(new FileReader("InputHidden1WeightsOpt.json"));
+            int numRows = inputHidden1Weights.size();
+            int numCols = ((JSONObject)inputHidden1Weights.get("0")).size();
+
+            for (int i = 0; i < numRows; i++) {
+                numCols = ((JSONObject)inputHidden1Weights.get(String.valueOf(i))).size();
+                for (int j = 0; j < numCols; j++) {
+                    this.inputHidden1Connections[i][j] = 
+                            (double)((JSONObject)(inputHidden1Weights
+                                    .get(String.valueOf(i))))
+                                    .get(String.valueOf(j));
+                }
+            }
+            
+            JSONObject hidden1Hidden2Weights = (JSONObject)new JSONParser()
+                        .parse(new FileReader("Hidden1Hidden2WeightsOpt.json"));
+            numRows = hidden1Hidden2Weights.size();
+            numCols = ((JSONObject)hidden1Hidden2Weights.get("0")).size();
+            for (int i = 0; i < numRows; i++) {
+                for (int j = 0; j < numCols; j++) {
+                    this.hidden1Hidden2Connections[i][j] = 
+                            (double)((JSONObject)hidden1Hidden2Weights
+                                    .get(String.valueOf(i)))
+                                    .get(String.valueOf(j));
+                }
+            }
+            
+            JSONObject hidden2OutputWeights = (JSONObject)new JSONParser()
+                        .parse(new FileReader("Hidden2OutputWeights.json"));
+            numRows = hidden2OutputWeights.size();
+            numCols = ((JSONObject)hidden2OutputWeights.get("0")).size();
+            for (int i = 0; i < numRows; i++) {
+                for (int j = 0; j < numCols; j++) {
+                    this.hidden2OutputConnections[i][j] = 
+                            (double)((JSONObject)hidden2OutputWeights
+                                    .get(String.valueOf(i)))
+                                    .get(String.valueOf(j));
+                }
+            }
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     
     public void saveWeight() {
         JSONObject inputHidden1Weights = new JSONObject();
@@ -188,6 +284,53 @@ public class NeuralNetwork {
             e.printStackTrace();
         }
     }
+    
+    public void saveWeightOpt() {
+        JSONObject inputHidden1Weights = new JSONObject();
+        for (int i = 0; i < this.numHiddenNeuron1; i++) {
+            JSONObject rows = new JSONObject();
+            for (int j = 0; j < this.numInputNeuron; j++) {
+                rows.put(j, this.inputHidden1Connections[i][j]);
+            }
+            inputHidden1Weights.put(i, rows);
+        }
+        
+        JSONObject hidden1Hidden2Weights = new JSONObject();
+        for (int i = 0; i < this.numHiddenNeuron2; i++) {
+            JSONObject rows = new JSONObject();
+            for (int j = 0; j < this.numHiddenNeuron1; j++) {
+                rows.put(j, this.hidden1Hidden2Connections[i][j]);
+            }
+            hidden1Hidden2Weights.put(i, rows);
+        }
+        
+        JSONObject hidden2OutputWeights = new JSONObject();
+        for (int i = 0; i < this.numOutputNeuron; i++) {
+            JSONObject rows = new JSONObject();
+            for (int j = 0; j < this.numHiddenNeuron2; j++) {
+                rows.put(j, this.hidden2OutputConnections[i][j]);
+            }
+            hidden2OutputWeights.put(i, rows);
+        }
+        
+        try {
+            FileWriter writer = new FileWriter("InputHidden1WeightsOpt.json");
+            writer.write(inputHidden1Weights.toJSONString());
+            writer.flush();
+            
+            writer = new FileWriter("Hidden1Hidden2WeightsOpt.json");
+            writer.write(hidden1Hidden2Weights.toJSONString());
+            writer.flush();
+            
+            writer = new FileWriter("Hidden2OutputWeightsOpt.json");
+            writer.write(hidden2OutputWeights.toJSONString());
+            writer.flush();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     
     public void saveWeight(JProgressBar progressBar) {
         progressBar.setString("Saving weights....");
@@ -259,16 +402,23 @@ public class NeuralNetwork {
         
     }
     
-    public void fit(JProgressBar progressBar, 
+    public ConfusionMatrix fit(JProgressBar progressBar, 
             javax.swing.JLabel neuralNetworkLossChart, 
             List<OutputNeuronLog> logs, 
-            javax.swing.JLabel classifiedRatioText) {
+            javax.swing.JLabel classifiedRatioText, 
+            javax.swing.JTable nnResultTable) {
         this.epochLoss = new ArrayList<>();
         int progress = 0;
         int currentProgress = 0;
         int maxProgress = this.EPOCH * this.data.length;
         int corrects = 0;
         int incorrects = 0;
+        ConfusionMatrix cm = new ConfusionMatrix();
+        
+        DefaultTableModel model = (DefaultTableModel)nnResultTable.getModel();
+        model.setRowCount(4);
+        model.setColumnCount(2);
+        
         for (int e = 0; e < this.EPOCH; e++) {
             for (int i = 0; i < this.data.length; i++) {
                 this.feedforward(this.data[i]);
@@ -287,7 +437,11 @@ public class NeuralNetwork {
                 for (double t : this.target[i]) {
                     listTarget.add(t);
                 }
+                
                 int maxActualIndex = MathFx.maxIndex(listTarget);
+                cm.update(maxActualIndex, maxPredictedIndex);
+                
+                
                 if (maxActualIndex == maxPredictedIndex) {
                     logs.get(maxPredictedIndex)
                         .setBackground(Color.GREEN);
@@ -299,9 +453,10 @@ public class NeuralNetwork {
                     incorrects++;
                 }
                 
-                classifiedRatioText.setText(corrects + "/" + incorrects);
+                classifiedRatioText.setText(corrects + "/" + incorrects + 
+                        " (" + (incorrects - corrects) + ")");
                 this.error = this.calculateError(this.target[i]);
-                this.epochLoss.add(this.error);
+                
                 
                 this.backpropagation(this.target[i]);
                 currentProgress++;
@@ -309,19 +464,135 @@ public class NeuralNetwork {
                         (double)maxProgress) * 100);
                 progressBar.setValue(progress);
                 progressBar.setString(progress + "%");
-                
-                this.displayLossChart(neuralNetworkLossChart);
             }
             
-            
-            for (double[] w : this.hidden1Hidden2Connections) {
-                System.out.println(Arrays.toString(w));
-            }
+            model.setValueAt("(Train = " + Math.round(((cm.getAccuracy() * 100.0) / 100.0) 
+                    * 100.0) + "%)", 0, 1);
+            model.setValueAt("(Train = " + Math.round(((cm.getPrecision() * 100.0) / 100.0) 
+                    * 100.0) + "%)", 1, 1);
+            model.setValueAt("(Train = " + Math.round(((cm.getRecall() * 100.0) / 100.0) 
+                    * 100.0) + "%)", 2, 1);
+            model.setValueAt("(Train = " + Math.round(((cm.getF1score() * 100.0) / 100.0) 
+                    * 100.0) + "%)", 3, 1);
+            this.epochLoss.add(this.error);
+            this.displayLossChart(neuralNetworkLossChart);
             System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
+            
+            if (e == this.EPOCH - 1) {
+                break;
+            }
+            cm.reset();
         }
     
         this.saveWeight(progressBar);
+        
+        this.score(this.testData, this.testTarget, model);
+        return cm;
     }
+    
+    public ConfusionMatrix scoreOpt(double[][] data, double[][] target) {
+        
+//        this.loadWeightOpt();
+        ConfusionMatrix cm = new ConfusionMatrix();
+        for (int i = 0; i < data.length; i++) {
+            this.feedforward(data[i]);
+            
+            List<Double> outputNeuronValues = new ArrayList<>();
+            for (int j = 0; j < this.numOutputNeuron; j++) {
+                outputNeuronValues.add(this.outputNeurons[j].getMappedValue());
+            }
+            
+            int maxPredictedIndex = MathFx.maxIndex(outputNeuronValues);
+            List<Double> listTarget = new ArrayList<>();
+            for (double t : target[i]) {
+                listTarget.add(t);
+            }
+
+            int maxActualIndex = MathFx.maxIndex(listTarget);
+            cm.update(maxActualIndex, maxPredictedIndex);
+            
+        }
+        return cm;
+    }
+    
+    public void score(double[][] data, double[][] target, 
+            DefaultTableModel model) {
+        
+        this.loadWeight();
+
+        ConfusionMatrix cm = new ConfusionMatrix();
+        for (int i = 0; i < data.length; i++) {
+            this.feedforward(data[i]);
+            
+            List<Double> outputNeuronValues = new ArrayList<>();
+            for (int j = 0; j < this.numOutputNeuron; j++) {
+                outputNeuronValues.add(this.outputNeurons[j].getMappedValue());
+            }
+            
+            int maxPredictedIndex = MathFx.maxIndex(outputNeuronValues);
+            List<Double> listTarget = new ArrayList<>();
+            for (double t : target[i]) {
+                listTarget.add(t);
+            }
+
+            int maxActualIndex = MathFx.maxIndex(listTarget);
+            cm.update(maxActualIndex, maxPredictedIndex);
+            
+        }
+        
+        model.setValueAt(model.getValueAt(0, 1) + ", (Test = " + 
+                Math.round(((cm.getAccuracy() * 100.0) / 100.0) 
+                * 100.0) + "%)", 0, 1);
+        model.setValueAt(model.getValueAt(1, 1) + ", (Test = " + 
+                Math.round(((cm.getPrecision() * 100.0) / 100.0) 
+                * 100.0) + "%)", 1, 1);
+        model.setValueAt(model.getValueAt(2, 1) + ", (Test = " + 
+                Math.round(((cm.getRecall() * 100.0) / 100.0) 
+                * 100.0) + "%)", 2, 1);
+        model.setValueAt(model.getValueAt(3, 1) + ", (Test = " + 
+                Math.round(((cm.getF1score() * 100.0) / 100.0) 
+                * 100.0) + "%)", 3, 1);
+    }
+    
+    public void scoreOpt(double[][] data, double[][] target, 
+            DefaultTableModel model) {
+        
+        this.loadWeightOpt();
+
+        ConfusionMatrix cm = new ConfusionMatrix();
+        for (int i = 0; i < data.length; i++) {
+            this.feedforward(data[i]);
+            
+            List<Double> outputNeuronValues = new ArrayList<>();
+            for (int j = 0; j < this.numOutputNeuron; j++) {
+                outputNeuronValues.add(this.outputNeurons[j].getMappedValue());
+            }
+            
+            int maxPredictedIndex = MathFx.maxIndex(outputNeuronValues);
+            List<Double> listTarget = new ArrayList<>();
+            for (double t : target[i]) {
+                listTarget.add(t);
+            }
+
+            int maxActualIndex = MathFx.maxIndex(listTarget);
+            cm.update(maxActualIndex, maxPredictedIndex);
+            
+        }
+        
+        model.setValueAt(model.getValueAt(0, 1) + ", (Test = " + 
+                Math.round(((cm.getAccuracy() * 100.0) / 100.0) 
+                * 100.0) + "%)", 0, 1);
+        model.setValueAt(model.getValueAt(1, 1) + ", (Test = " + 
+                Math.round(((cm.getPrecision() * 100.0) / 100.0) 
+                * 100.0) + "%)", 1, 1);
+        model.setValueAt(model.getValueAt(2, 1) + ", (Test = " + 
+                Math.round(((cm.getRecall() * 100.0) / 100.0) 
+                * 100.0) + "%)", 2, 1);
+        model.setValueAt(model.getValueAt(3, 1) + ", (Test = " + 
+                Math.round(((cm.getF1score() * 100.0) / 100.0) 
+                * 100.0) + "%)", 3, 1);
+    }
+    
     
     public void fit() {
         for (int e = 0; e < this.EPOCH; e++) {
@@ -330,6 +601,7 @@ public class NeuralNetwork {
                 
                 this.error = this.calculateError(this.target[i]);
                 this.backpropagation(this.target[i]);
+                
             }
             
             for (double[] w : this.hidden1Hidden2Connections) {
@@ -341,18 +613,71 @@ public class NeuralNetwork {
         this.saveWeight();
     }
     
-    public void predict(double[][] data) {
-        this.loadWeight();
-        double[] predicted = new double[this.numOutputNeuron];
+    public ConfusionMatrix fitOpt() {
+        ConfusionMatrix cm = new ConfusionMatrix();
+        for (int e = 0; e < this.EPOCH; e++) {
+            for (int i = 0; i < this.data.length; i++) {
+                this.feedforward(this.data[i]);
+                
+                List<Double> outputNeuronValues = new ArrayList<>();
+                for (int j = 0; j < this.numOutputNeuron; j++) {
+                    outputNeuronValues
+                            .add(this.outputNeurons[j].getMappedValue());
+                }
+                int maxPredictedIndex = MathFx.maxIndex(outputNeuronValues);
+                List<Double> listTarget = new ArrayList<>();
+                for (double t : this.target[i]) {
+                    listTarget.add(t);
+                }
+                
+                int maxActualIndex = MathFx.maxIndex(listTarget);
+                cm.update(maxActualIndex, maxPredictedIndex);
+                
+                this.error = this.calculateError(this.target[i]);
+                this.backpropagation(this.target[i]);
+            }
+            
+            for (double[] w : this.hidden1Hidden2Connections) {
+                System.out.println(Arrays.toString(w));
+            }
+            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
+        }
         
-        for (double[] row : data) {
-            this.feedforward(row);
+//        this.saveWeightOpt();
+        return this.scoreOpt(this.testData, this.testTarget);
+    }
+    
+    public double[][] predictOpt(double[][] data) {
+        this.loadWeightOpt();
+        double[][] results = new double[data.length][this.numOutputNeuron];
+        
+        for (int j = 0; j < data.length; j++) {
+            this.feedforward(data[j]);
+            double[] predicted = new double[this.numOutputNeuron];
             for (int i = 0; i < this.numOutputNeuron; i++) {
                 predicted[i] = this.outputNeurons[i].getMappedValue();
             }
-            
-            System.out.println(Arrays.toString(predicted));
+            results[j] = predicted;
         }
+        
+        return results;
+    }
+    
+    
+    public double[][] predict(double[][] data) {
+        this.loadWeight();
+        double[][] results = new double[data.length][this.numOutputNeuron];
+        
+        for (int j = 0; j < data.length; j++) {
+            this.feedforward(data[j]);
+            double[] predicted = new double[this.numOutputNeuron];
+            for (int i = 0; i < this.numOutputNeuron; i++) {
+                predicted[i] = this.outputNeurons[i].getMappedValue();
+            }
+            results[j] = predicted;
+        }
+        
+        return results;
     }
     
     private void feedforward(double[] data) {
@@ -608,7 +933,7 @@ public class NeuralNetwork {
     
     
     
-    private void initializeInputHidden1Connections() {
+    public double[][] initializeInputHidden1Connections() {
         this.inputHidden1Connections = 
                 new double[this.numHiddenNeuron1][this.numInputNeuron];
         this.deltaInput = new double[this.numInputNeuron];
@@ -618,9 +943,10 @@ public class NeuralNetwork {
                 this.inputHidden1Connections[i][j] = MathFx.randUniform(1);
             }
         }
+        return this.inputHidden1Connections;
     }
     
-    private void initializeHidden1Hidden2Connections() {
+    public double[][] initializeHidden1Hidden2Connections() {
         this.hidden1Hidden2Connections = 
                 new double[this.numHiddenNeuron2][this.numHiddenNeuron1];
         this.deltaHidden2 = new double[this.numHiddenNeuron2];
@@ -629,9 +955,10 @@ public class NeuralNetwork {
                 this.hidden1Hidden2Connections[i][j] = MathFx.randUniform(1);
             }
         }
+        return this.hidden1Hidden2Connections;
     }
     
-    private void initializeHidden2OutputConnections() {
+    public double[][] initializeHidden2OutputConnections() {
         this.hidden2OutputConnections =
                 new double[this.numOutputNeuron][this.numHiddenNeuron2];
         for (int i = 0; i < this.numOutputNeuron; i++) {
@@ -639,6 +966,7 @@ public class NeuralNetwork {
                 this.hidden2OutputConnections[i][j] = MathFx.randUniform(1);
             }
         }
+        return this.hidden2OutputConnections;
     }
     
     private void initializeInputNeurons() {
