@@ -898,7 +898,7 @@ public class Main extends javax.swing.JFrame {
             for (Map.Entry<String, List<String>> ent: 
                 FileHandler.LABELS.entrySet()) {
                 
-                String path = "data/" + ent.getKey();
+                String path = chooser.getSelectedFile().toString() + "/" + ent.getKey();
                 for (String filename : ent.getValue()) {
                     
                     filenames.add(filename);

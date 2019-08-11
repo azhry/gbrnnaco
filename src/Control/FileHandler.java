@@ -34,7 +34,7 @@ public class FileHandler {
             if (entry.isDirectory()) {
                 FileHandler.CURRENT_DIR = entry.getName();
                 FileHandler.LABELS.put(FileHandler.CURRENT_DIR, 
-                        new ArrayList<>());
+                        new ArrayList<String>());
                 FileHandler.readRecursive(path + "/" + entry.getName());
             }
             else {
