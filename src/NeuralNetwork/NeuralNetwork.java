@@ -680,6 +680,10 @@ public class NeuralNetwork {
         return results;
     }
     
+    public double getError() {
+        return this.error;
+    }
+    
     private void feedforward(double[] data) {
         this.calculateInputHidden1(data);
         this.calculateHidden1Hidden2();
@@ -911,6 +915,7 @@ public class NeuralNetwork {
     }
     
     private double[] calculateHidden2Output() {
+        
         double bias = MathFx.randUniform(1);
         double[] inputValues = new double[this.numOutputNeuron];
         for (int i = 0; i < this.numOutputNeuron; i++) {
@@ -923,7 +928,31 @@ public class NeuralNetwork {
             this.outputNeurons[i].setValue(inputValues[i]);
         }
         
+//        final int SPLIT_SIZE = 5;
+//        double[] partition = null;
+//        double[] mappedValues = new double[inputValues.length];
+//        for (int i = 0; i < inputValues.length; i++) {
+//            if (i % SPLIT_SIZE == 0) {
+//                partition = new double[SPLIT_SIZE];
+//            }
+//            partition[i % SPLIT_SIZE] = inputValues[i];
+//            
+//            if (i % SPLIT_SIZE == SPLIT_SIZE - 1) {
+//                double[] mappedValuesPartition = Activation.softmax(partition);
+//                System.out.println(Arrays.toString(partition));
+//                System.out.println(Arrays.toString(mappedValuesPartition));
+//                for (int j = 0; j < mappedValuesPartition.length; j++) {
+//                    this.outputNeurons[i - (SPLIT_SIZE - 1) + j]
+//                            .setMappedValue(mappedValuesPartition[j]);
+//                    mappedValues[i - (SPLIT_SIZE - 1) + j] = mappedValuesPartition[j];
+//                }
+//            }
+//        }
+        
+        
         double[] mappedValues = Activation.softmax(inputValues);
+        System.out.println(Arrays.toString(inputValues));
+        System.out.println(Arrays.toString(mappedValues));
         for (int i = 0; i < mappedValues.length; i++) {
             this.outputNeurons[i].setMappedValue(mappedValues[i]);
         }

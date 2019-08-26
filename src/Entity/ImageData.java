@@ -32,6 +32,7 @@ public class ImageData {
     private double[] filteredData;
     private double[] data;
     private String label;
+    private double avgFilter;
     
     public ImageData(String path, Mat kernel, String label) {
         this.label = label;
@@ -50,14 +51,19 @@ public class ImageData {
         this.filteredData = new double[this.filteredImg.rows() * 
                 this.filteredImg.cols()];
         int i = 0;
+        double total = 0;
         for (int j = 0; j < this.filteredImg.rows(); j++) {
             for (int k = 0; k < this.filteredImg.cols(); k++) {
                 for (int l = 0; l < this.filteredImg.channels(); l++) {
                     this.filteredData[i] = this.filteredImg.get(j, k)[l];
+                    total += this.filteredImg.get(j, k)[l];
                     i++;
                 } 
             }
         }
+        
+        this.avgFilter = total / (double)(this.filteredImg.rows() * 
+                this.filteredImg.cols() * this.filteredImg.channels());
     }
     
     public ImageData(String path, String label) {
@@ -121,6 +127,10 @@ public class ImageData {
         return this.grayImg;
     }
     
+    public double getAvgFilter() {
+        return this.avgFilter;
+    }
+    
     public Image getBufferFilteredImg() {
         byte[] data = new byte[this.filteredImg.width() * 
                 this.filteredImg.height() * (int)this.filteredImg.elemSize()];
@@ -137,6 +147,22 @@ public class ImageData {
                 this.filteredImg.height(), type);
         im.getRaster().setDataElements(0, 0, this.filteredImg.width(), 
                 this.filteredImg.height(), data);
+        
+        int i = 0;
+        double total = 0;
+        for (int j = 0; j < this.filteredImg.rows(); j++) {
+            for (int k = 0; k < this.filteredImg.cols(); k++) {
+                for (int l = 0; l < this.filteredImg.channels(); l++) {
+                    this.filteredData[i] = this.filteredImg.get(j, k)[l];
+                    total += this.filteredImg.get(j, k)[l];
+                    i++;
+                } 
+            }
+        }
+        
+        this.avgFilter = total / (double)(this.filteredImg.rows() * 
+                this.filteredImg.cols() * this.filteredImg.channels());
+        
         return im;
     }
     

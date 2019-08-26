@@ -34,6 +34,7 @@ public class ImageRow extends javax.swing.JPanel {
         filteredImage = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         filelabel = new javax.swing.JLabel();
+        avgValueText = new javax.swing.JLabel();
 
         jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel5.setPreferredSize(new java.awt.Dimension(558, 100));
@@ -54,7 +55,7 @@ public class ImageRow extends javax.swing.JPanel {
         filteredImage.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         filteredImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         filteredImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/icons8-picture-32.png"))); // NOI18N
-        jPanel5.add(filteredImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 0, 160, 120));
+        jPanel5.add(filteredImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 0, 160, 120));
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel13.setText("Label");
@@ -63,13 +64,14 @@ public class ImageRow extends javax.swing.JPanel {
         filelabel.setText("azhry");
         jPanel5.add(filelabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, -1, -1));
 
+        avgValueText.setText("0.0");
+        jPanel5.add(avgValueText, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 50, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -81,6 +83,7 @@ public class ImageRow extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JLabel avgValueText;
     public javax.swing.JLabel filelabel;
     public javax.swing.JLabel filename;
     public javax.swing.JLabel filteredImage;

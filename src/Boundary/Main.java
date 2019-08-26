@@ -71,6 +71,14 @@ public class Main extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jToolBar1 = new javax.swing.JToolBar();
         jPanel1 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         jToolBar2 = new javax.swing.JToolBar();
         jPanel2 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
@@ -118,7 +126,7 @@ public class Main extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         nnAcoResultTable = new javax.swing.JTable();
-        jLabel11 = new javax.swing.JLabel();
+        neuralNetworkAcoLossChart = new javax.swing.JLabel();
         neuralNetworkAcoProgressBar = new javax.swing.JProgressBar();
         jSplitPane5 = new javax.swing.JSplitPane();
         jPanel10 = new javax.swing.JPanel();
@@ -150,20 +158,98 @@ public class Main extends javax.swing.JFrame {
         loadImageProgramButton = new javax.swing.JButton();
         runNeuralNetworkProgramButton = new javax.swing.JButton();
         runNeuralNetworkAcoProgramButton = new javax.swing.JButton();
+        nnAccuracyText = new javax.swing.JLabel();
+        nnAcoAccuracyText = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jToolBar1.setRollover(true);
 
+        jLabel12.setFont(new java.awt.Font("Tahoma", 2, 24)); // NOI18N
+        jLabel12.setText("Ant Colony Optimization");
+
+        jButton1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButton1.setText("Praproses");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                goToETLTab(evt);
+            }
+        });
+
+        jLabel23.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel23.setText("Untuk Identifikasi Citra Tanda Tangan");
+
+        jLabel24.setFont(new java.awt.Font("Tahoma", 2, 24)); // NOI18N
+        jLabel24.setText("Neural Network");
+
+        jLabel26.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel26.setText("Menggunakan");
+
+        jLabel27.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel27.setText("Optimasi");
+
+        jButton4.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButton4.setText("Pengujian");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                goToProgramTab(evt);
+            }
+        });
+
+        jButton5.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jButton5.setText("Pelatihan");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                goToClassificationTab(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 799, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(321, 321, 321)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel27)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel26)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(153, 153, 153)
+                                .addComponent(jLabel23)))))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 556, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel27)
+                    .addComponent(jLabel24)
+                    .addComponent(jLabel26)
+                    .addComponent(jLabel12))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel23)
+                .addGap(43, 43, 43)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(146, Short.MAX_VALUE))
         );
 
         jToolBar1.add(jPanel1);
@@ -456,8 +542,8 @@ public class Main extends javax.swing.JFrame {
         ));
         jScrollPane3.setViewportView(nnAcoResultTable);
 
-        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/icons8-system-task-100.png"))); // NOI18N
+        neuralNetworkAcoLossChart.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        neuralNetworkAcoLossChart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/icons8-system-task-100.png"))); // NOI18N
 
         neuralNetworkAcoProgressBar.setStringPainted(true);
 
@@ -466,7 +552,7 @@ public class Main extends javax.swing.JFrame {
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(neuralNetworkAcoLossChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(neuralNetworkAcoProgressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel9Layout.setVerticalGroup(
@@ -475,7 +561,7 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(neuralNetworkAcoLossChart, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(neuralNetworkAcoProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(24, Short.MAX_VALUE))
@@ -721,13 +807,23 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        nnAccuracyText.setText("Akurasi NN: ");
+
+        nnAcoAccuracyText.setText("Akurasi NN-ACO: ");
+
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
         jPanel13Layout.setHorizontalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(loadImageProgramButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(runNeuralNetworkProgramButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(runNeuralNetworkAcoProgramButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(runNeuralNetworkAcoProgramButton, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nnAcoAccuracyText)
+                    .addComponent(nnAccuracyText))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -737,7 +833,11 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(runNeuralNetworkProgramButton)
                 .addGap(18, 18, 18)
                 .addComponent(runNeuralNetworkAcoProgramButton)
-                .addContainerGap(445, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(nnAccuracyText)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nnAcoAccuracyText)
+                .addContainerGap(393, Short.MAX_VALUE))
         );
 
         jSplitPane6.setLeftComponent(jPanel13);
@@ -985,12 +1085,21 @@ public class Main extends javax.swing.JFrame {
         NeuralNetwork nn = new NeuralNetwork(finalFeatures, finalClasses, 
                 labels.length + 2);
         double[][] predicted = nn.predict(finalFeatures);
+        int truePositives = 0;
         for (int i = 0; i < finalFeatures.length; i++) {
             this.resultProgramModel.setValueAt(labels[MathFx
                     .maxIndex(predicted[i])].toString(), i, 2);
             this.resultProgramModel.setValueAt(MathFx.maxIndex(predicted[i]) 
                     == MathFx.maxIndex(finalClasses[i]), i, 3);
+            if (MathFx.maxIndex(predicted[i]) 
+                    == MathFx.maxIndex(finalClasses[i])) {
+                truePositives++;
+            }
         }
+        
+        double accuracy = (double)truePositives / (double)finalFeatures.length;
+        this.nnAccuracyText.setText("Akurasi NN: " + 
+                Math.round(((accuracy * 100.0) / 100.0) * 100.0) + "%");
     }//GEN-LAST:event_runNeuralNetworkProgramButton
 
     private void runNeuralNetworkAcoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runNeuralNetworkAcoButtonActionPerformed
@@ -1060,7 +1169,8 @@ public class Main extends javax.swing.JFrame {
                 labels.length + 2, learningRate, epoch, splitRatio);
 
         System.out.println("START ACO");
-        new RunNeuralNetworkAcoWorker(nn, this.neuralNetworkAcoProgressBar, 
+        new RunNeuralNetworkAcoWorker(nn, this.neuralNetworkAcoProgressBar,
+                this.neuralNetworkAcoLossChart,
                 this.nnAcoResultTable, population, 1.0, alpha, beta, 
                 evaporationRate, rewardFactor, iteration, finalFeatures, finalClasses, 
                 labels.length + 2, learningRate, epoch, splitRatio)
@@ -1120,19 +1230,41 @@ public class Main extends javax.swing.JFrame {
         NeuralNetwork nn = new NeuralNetwork(finalFeatures, finalClasses, 
                 labels.length + 2);
         double[][] predicted = nn.predictOpt(finalFeatures);
+        int truePositives = 0;
         for (int i = 0; i < finalFeatures.length; i++) {
             this.resultProgramModel.setValueAt(labels[MathFx
                     .maxIndex(predicted[i])].toString(), i, 2);
             this.resultProgramModel.setValueAt(MathFx.maxIndex(predicted[i]) 
                     == MathFx.maxIndex(finalClasses[i]), i, 3);
+            if (MathFx.maxIndex(predicted[i]) 
+                    == MathFx.maxIndex(finalClasses[i])) {
+                truePositives++;
+            }
         }
+        
+        double accuracy = (double)truePositives / (double)finalFeatures.length;
+        this.nnAcoAccuracyText.setText("Akurasi NN-ACO: " + 
+                Math.round(((accuracy * 100.0) / 100.0) * 100.0) + "%");
     }//GEN-LAST:event_runNeuralNetworkAcoProgramButton
+
+    private void goToETLTab(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToETLTab
+        this.jTabbedPane1.setSelectedIndex(1);
+    }//GEN-LAST:event_goToETLTab
+
+    private void goToClassificationTab(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToClassificationTab
+        this.jTabbedPane1.setSelectedIndex(2);
+    }//GEN-LAST:event_goToClassificationTab
+
+    private void goToProgramTab(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToProgramTab
+        this.jTabbedPane1.setSelectedIndex(3);
+    }//GEN-LAST:event_goToProgramTab
 
     class RunNeuralNetworkAcoWorker extends SwingWorker {
 
         private final NeuralNetwork nn;
         private final JProgressBar progressBar;
         private final javax.swing.JTable resultTable;
+        private final javax.swing.JLabel lossChart;
         private final int numberOfAnts;
         private final double Q;
         private final double alpha;
@@ -1148,6 +1280,7 @@ public class Main extends javax.swing.JFrame {
         
         public RunNeuralNetworkAcoWorker(NeuralNetwork nn, 
                 JProgressBar progressBar,  
+                javax.swing.JLabel lossChart,
                 javax.swing.JTable resultTable, 
                 int numberOfAnts, double Q, double alpha, double beta, 
                 double evaporationRate, double rewardFactor,
@@ -1170,6 +1303,7 @@ public class Main extends javax.swing.JFrame {
             this.epoch = epoch;
             this.splitRatio = splitRatio;
             this.learningRate = learningRate;
+            this.lossChart = lossChart;
         }
         
         @Override
@@ -1190,7 +1324,7 @@ public class Main extends javax.swing.JFrame {
                     this.iteration);
             aco.executeAco(this.features, this.classes, this.numHiddenNeuron, 
                     this.learningRate, this.epoch, this.splitRatio, 
-                    this.progressBar, this.resultTable);
+                    this.progressBar, this.resultTable, this.lossChart);
             return null;
         }
         
@@ -1342,6 +1476,9 @@ public class Main extends javax.swing.JFrame {
                Image filteredImage = id.getBufferFilteredImg();
                this.rowData.get(i).filteredImage
                        .setIcon(new ImageIcon(filteredImage));
+               this.rowData.get(i)
+                       .avgValueText
+                       .setText(String.valueOf(id.getAvgFilter()));
            }
             
             repaint();
@@ -1410,9 +1547,12 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTextField gammaField;
     private javax.swing.JPanel imageListPanel;
     private javax.swing.JSpinner iterationField;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -1424,6 +1564,10 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1465,9 +1609,12 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTextField learningRateField;
     private javax.swing.JButton loadImageButton;
     private javax.swing.JButton loadImageProgramButton;
+    private javax.swing.JLabel neuralNetworkAcoLossChart;
     private javax.swing.JProgressBar neuralNetworkAcoProgressBar;
     private javax.swing.JLabel neuralNetworkLossChart;
     private javax.swing.JProgressBar neuralNetworkProgressBar;
+    private javax.swing.JLabel nnAccuracyText;
+    private javax.swing.JLabel nnAcoAccuracyText;
     private javax.swing.JTable nnAcoResultTable;
     private javax.swing.JTable nnResultTable;
     private javax.swing.JPanel outputNeuronLogPanel;

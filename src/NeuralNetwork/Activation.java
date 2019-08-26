@@ -41,6 +41,19 @@ public class Activation {
         return result;
     }
     
+    public static double[] hierarchicalSoftmax(double[] n) {
+        int len = n.length;
+        double[] result = new double[len];
+        
+        return result;
+    }
+    
+    private static double[] calculateHierarchicalSoftmax(double[] n) {
+        double[] result = new double[n.length];
+        return result;
+    }
+    
+    
     public static double[] softmaxDerivative(double[] n) {
         double[] output = Activation.softmax(n);
         double[] result = new double[output.length];
