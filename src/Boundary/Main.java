@@ -11,6 +11,7 @@ import Entity.ImageData;
 import NeuralNetwork.ConfusionMatrix;
 import NeuralNetwork.NeuralNetwork;
 import AntColonyOptimization.AntColonyOptimization;
+import AntColonyOptimization.AntColonyOptimization_2;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1169,12 +1170,17 @@ public class Main extends javax.swing.JFrame {
                 labels.length + 2, learningRate, epoch, splitRatio);
 
         System.out.println("START ACO");
-        new RunNeuralNetworkAcoWorker(nn, this.neuralNetworkAcoProgressBar,
-                this.neuralNetworkAcoLossChart,
-                this.nnAcoResultTable, population, 1.0, alpha, beta, 
-                evaporationRate, rewardFactor, iteration, finalFeatures, finalClasses, 
-                labels.length + 2, learningRate, epoch, splitRatio)
-                .execute();
+        AntColonyOptimization_2 aco = new AntColonyOptimization_2(
+                    population, iteration, alpha, 1.0, 1.0);
+        aco.initializePopulations(finalFeatures, finalClasses, labels.length + 2, 
+                learningRate, epoch, splitRatio);
+        aco.execute(this.neuralNetworkAcoProgressBar, nnAcoResultTable, neuralNetworkAcoLossChart);
+//        new RunNeuralNetworkAcoWorker(nn, this.neuralNetworkAcoProgressBar,
+//                this.neuralNetworkAcoLossChart,
+//                this.nnAcoResultTable, population, 1.0, alpha, beta, 
+//                evaporationRate, rewardFactor, iteration, finalFeatures, finalClasses, 
+//                labels.length + 2, learningRate, epoch, splitRatio)
+//                .execute();
         
     }//GEN-LAST:event_runNeuralNetworkAcoButtonActionPerformed
 
@@ -1319,12 +1325,18 @@ public class Main extends javax.swing.JFrame {
         @Override
         protected Object doInBackground() throws Exception {
             
-            AntColonyOptimization aco = new AntColonyOptimization(this.nn, 
-                    this.numberOfAnts, this.Q, this.alpha, this.beta, 
-                    this.iteration);
-            aco.executeAco(this.features, this.classes, this.numHiddenNeuron, 
-                    this.learningRate, this.epoch, this.splitRatio, 
-                    this.progressBar, this.resultTable, this.lossChart);
+//            AntColonyOptimization aco = new AntColonyOptimization(this.nn, 
+//                    this.numberOfAnts, this.Q, this.alpha, this.beta, 
+//                    this.iteration);
+//            aco.executeAco(this.features, this.classes, this.numHiddenNeuron, 
+//                    this.learningRate, this.epoch, this.splitRatio, 
+//                    this.progressBar, this.resultTable, this.lossChart);
+
+            AntColonyOptimization_2 aco = new AntColonyOptimization_2(
+                    this.numberOfAnts, this.iteration, this.alpha, this.Q, 1.0);
+            aco.initializePopulations(features, classes, numHiddenNeuron, 
+                    learningRate, epoch, splitRatio);
+            aco.execute(this.progressBar, this.resultTable, this.lossChart);
             return null;
         }
         

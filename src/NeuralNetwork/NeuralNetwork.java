@@ -29,7 +29,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -180,7 +179,7 @@ public class NeuralNetwork {
             Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -233,7 +232,7 @@ public class NeuralNetwork {
             Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -269,15 +268,15 @@ public class NeuralNetwork {
         
         try {
             FileWriter writer = new FileWriter("InputHidden1Weights.json");
-            writer.write(inputHidden1Weights.toJSONString());
+            writer.write(inputHidden1Weights.toString());
             writer.flush();
             
             writer = new FileWriter("Hidden1Hidden2Weights.json");
-            writer.write(hidden1Hidden2Weights.toJSONString());
+            writer.write(hidden1Hidden2Weights.toString());
             writer.flush();
             
             writer = new FileWriter("Hidden2OutputWeights.json");
-            writer.write(hidden2OutputWeights.toJSONString());
+            writer.write(hidden2OutputWeights.toString());
             writer.flush();
         }
         catch (IOException e) {
@@ -315,15 +314,15 @@ public class NeuralNetwork {
         
         try {
             FileWriter writer = new FileWriter("InputHidden1WeightsOpt.json");
-            writer.write(inputHidden1Weights.toJSONString());
+            writer.write(inputHidden1Weights.toString());
             writer.flush();
             
             writer = new FileWriter("Hidden1Hidden2WeightsOpt.json");
-            writer.write(hidden1Hidden2Weights.toJSONString());
+            writer.write(hidden1Hidden2Weights.toString());
             writer.flush();
             
             writer = new FileWriter("Hidden2OutputWeightsOpt.json");
-            writer.write(hidden2OutputWeights.toJSONString());
+            writer.write(hidden2OutputWeights.toString());
             writer.flush();
         }
         catch (IOException e) {
@@ -363,15 +362,15 @@ public class NeuralNetwork {
         
         try {
             FileWriter writer = new FileWriter("InputHidden1Weights.json");
-            writer.write(inputHidden1Weights.toJSONString());
+            writer.write(inputHidden1Weights.toString());
             writer.flush();
             
             writer = new FileWriter("Hidden1Hidden2Weights.json");
-            writer.write(hidden1Hidden2Weights.toJSONString());
+            writer.write(hidden1Hidden2Weights.toString());
             writer.flush();
             
             writer = new FileWriter("Hidden2OutputWeights.json");
-            writer.write(hidden2OutputWeights.toJSONString());
+            writer.write(hidden2OutputWeights.toString());
             writer.flush();
             
             progressBar.setString("Weights Saved");
@@ -604,9 +603,9 @@ public class NeuralNetwork {
                 
             }
             
-            for (double[] w : this.hidden1Hidden2Connections) {
-                System.out.println(Arrays.toString(w));
-            }
+//            for (double[] w : this.hidden1Hidden2Connections) {
+//                System.out.println(Arrays.toString(w));
+//            }
             System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
         }
         
@@ -637,9 +636,9 @@ public class NeuralNetwork {
                 this.backpropagation(this.target[i]);
             }
             
-            for (double[] w : this.hidden1Hidden2Connections) {
-                System.out.println(Arrays.toString(w));
-            }
+//            for (double[] w : this.hidden1Hidden2Connections) {
+//                System.out.println(Arrays.toString(w));
+//            }
             System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
         }
         
@@ -951,8 +950,6 @@ public class NeuralNetwork {
         
         
         double[] mappedValues = Activation.softmax(inputValues);
-        System.out.println(Arrays.toString(inputValues));
-        System.out.println(Arrays.toString(mappedValues));
         for (int i = 0; i < mappedValues.length; i++) {
             this.outputNeurons[i].setMappedValue(mappedValues[i]);
         }
@@ -1024,5 +1021,29 @@ public class NeuralNetwork {
         for (int i = 0; i < this.numOutputNeuron; i++) {
             this.outputNeurons[i] = new Neuron(Type.OUTPUT);
         }
+    }
+    
+    public double[][] getInputHidden1Connections() {
+        return this.inputHidden1Connections;
+    }
+    
+    public double[][] getHidden1Hidden2Connections() {
+        return this.hidden1Hidden2Connections;
+    }
+    
+    public double[][] getHidden2OutputConnections() {
+        return this.hidden2OutputConnections;
+    }
+    
+    public void setInputHidden1Connections(double[][] connections) {
+        this.inputHidden1Connections = connections;
+    }
+    
+    public void setHidden1Hidden2Connections(double[][] connections) {
+        this.hidden1Hidden2Connections = connections;
+    }
+    
+    public void setHidden2OutputConnections(double[][] connections) {
+        this.hidden2OutputConnections = connections;
     }
 }

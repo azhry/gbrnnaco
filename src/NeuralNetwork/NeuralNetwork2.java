@@ -29,7 +29,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -248,8 +247,8 @@ public class NeuralNetwork2 {
             Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(NeuralNetwork2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -301,8 +300,8 @@ public class NeuralNetwork2 {
             Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(NeuralNetwork.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(NeuralNetwork2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -337,15 +336,15 @@ public class NeuralNetwork2 {
         
         try {
             FileWriter writer = new FileWriter("InputHidden1Weights.json");
-            writer.write(inputHidden1Weights.toJSONString());
+            writer.write(inputHidden1Weights.toString());
             writer.flush();
             
             writer = new FileWriter("Hidden1Hidden2Weights.json");
-            writer.write(hidden1Hidden2Weights.toJSONString());
+            writer.write(hidden1Hidden2Weights.toString());
             writer.flush();
             
             writer = new FileWriter("Hidden2OutputWeights.json");
-            writer.write(hidden2OutputWeights.toJSONString());
+            writer.write(hidden2OutputWeights.toString());
             writer.flush();
         }
         catch (IOException e) {
@@ -383,15 +382,15 @@ public class NeuralNetwork2 {
         
         try {
             FileWriter writer = new FileWriter("InputHidden1WeightsOpt.json");
-            writer.write(inputHidden1Weights.toJSONString());
+            writer.write(inputHidden1Weights.toString());
             writer.flush();
             
             writer = new FileWriter("Hidden1Hidden2WeightsOpt.json");
-            writer.write(hidden1Hidden2Weights.toJSONString());
+            writer.write(hidden1Hidden2Weights.toString());
             writer.flush();
             
             writer = new FileWriter("Hidden2OutputWeightsOpt.json");
-            writer.write(hidden2OutputWeights.toJSONString());
+            writer.write(hidden2OutputWeights.toString());
             writer.flush();
         }
         catch (IOException e) {
@@ -438,17 +437,17 @@ public class NeuralNetwork2 {
         
         try {
             FileWriter writer = new FileWriter("InputHiddenWeights.json");
-            writer.write(inputHiddenWeights.toJSONString());
+            writer.write(inputHiddenWeights.toString());
             writer.flush();
             
             for (int i = 0; i < this.NUM_HIDDEN_LAYERS - 1; i++) {
                 writer = new FileWriter("InterHidden" + i + "Weights.json");
-                writer.write(interHiddenWeights[i].toJSONString());
+                writer.write(interHiddenWeights[i].toString());
                 writer.flush();
             }
             
             writer = new FileWriter("HiddenOutputWeights.json");
-            writer.write(hiddenOutputWeights.toJSONString());
+            writer.write(hiddenOutputWeights.toString());
             writer.flush();
             
             progressBar.setString("Weights Saved");
