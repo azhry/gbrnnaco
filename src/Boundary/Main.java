@@ -326,7 +326,7 @@ public class Main extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(loadImageButton, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+            .addComponent(loadImageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, Short.MAX_VALUE)
             .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(runGaborButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -665,15 +665,15 @@ public class Main extends javax.swing.JFrame {
 
         betaField.setText("0.3");
 
-        jLabel18.setText("Beta");
+        jLabel18.setText("Q");
 
         evaporationField.setText("0.5");
 
         jLabel19.setText("Evaporation Rate");
 
-        jLabel20.setText("Reward Factor");
+        jLabel20.setText("Target");
 
-        rewardFactorField.setText("0.5");
+        rewardFactorField.setText("1.0");
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -818,7 +818,7 @@ public class Main extends javax.swing.JFrame {
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(loadImageProgramButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(runNeuralNetworkProgramButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(runNeuralNetworkAcoProgramButton, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+            .addComponent(runNeuralNetworkAcoProgramButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -974,7 +974,7 @@ public class Main extends javax.swing.JFrame {
                 labels.length + 2, learningRate, epoch, splitRatio);
         new RunNeuralNetworkWorker(nn, this.neuralNetworkProgressBar, 
                 this.neuralNetworkLossChart, this.rowLog, this.classifiedRatio, 
-                this.nnResultTable)
+                this.nnResultTable, this.rewardFactorField)
                 .execute();
         
     }//GEN-LAST:event_runNeuralNetwork
@@ -1170,17 +1170,17 @@ public class Main extends javax.swing.JFrame {
                 labels.length + 2, learningRate, epoch, splitRatio);
 
         System.out.println("START ACO");
-        AntColonyOptimization_2 aco = new AntColonyOptimization_2(
-                    population, iteration, alpha, 1.0, 1.0);
-        aco.initializePopulations(finalFeatures, finalClasses, labels.length + 2, 
-                learningRate, epoch, splitRatio);
-        aco.execute(this.neuralNetworkAcoProgressBar, nnAcoResultTable, neuralNetworkAcoLossChart);
-//        new RunNeuralNetworkAcoWorker(nn, this.neuralNetworkAcoProgressBar,
-//                this.neuralNetworkAcoLossChart,
-//                this.nnAcoResultTable, population, 1.0, alpha, beta, 
-//                evaporationRate, rewardFactor, iteration, finalFeatures, finalClasses, 
-//                labels.length + 2, learningRate, epoch, splitRatio)
-//                .execute();
+//        AntColonyOptimization_2 aco = new AntColonyOptimization_2(
+//                    population, iteration, alpha, beta, rewardFactor);
+//        aco.initializePopulations(finalFeatures, finalClasses, labels.length + 2, 
+//                learningRate, epoch, splitRatio);
+//        aco.execute(this.neuralNetworkAcoProgressBar, nnAcoResultTable, neuralNetworkAcoLossChart);
+        new RunNeuralNetworkAcoWorker(nn, this.neuralNetworkAcoProgressBar,
+                this.neuralNetworkAcoLossChart,
+                this.nnAcoResultTable, population, beta, alpha, beta, 
+                evaporationRate, rewardFactor, iteration, finalFeatures, finalClasses, 
+                labels.length + 2, learningRate, epoch, splitRatio)
+                .execute();
         
     }//GEN-LAST:event_runNeuralNetworkAcoButtonActionPerformed
 
@@ -1236,12 +1236,14 @@ public class Main extends javax.swing.JFrame {
         NeuralNetwork nn = new NeuralNetwork(finalFeatures, finalClasses, 
                 labels.length + 2);
         double[][] predicted = nn.predictOpt(finalFeatures);
+        
         int truePositives = 0;
         for (int i = 0; i < finalFeatures.length; i++) {
             this.resultProgramModel.setValueAt(labels[MathFx
                     .maxIndex(predicted[i])].toString(), i, 2);
             this.resultProgramModel.setValueAt(MathFx.maxIndex(predicted[i]) 
                     == MathFx.maxIndex(finalClasses[i]), i, 3);
+
             if (MathFx.maxIndex(predicted[i]) 
                     == MathFx.maxIndex(finalClasses[i])) {
                 truePositives++;
@@ -1283,13 +1285,14 @@ public class Main extends javax.swing.JFrame {
         private final double splitRatio;
         private final double learningRate;
         private final double evaporationRate;
+        private final double target;
         
         public RunNeuralNetworkAcoWorker(NeuralNetwork nn, 
                 JProgressBar progressBar,  
                 javax.swing.JLabel lossChart,
                 javax.swing.JTable resultTable, 
                 int numberOfAnts, double Q, double alpha, double beta, 
-                double evaporationRate, double rewardFactor,
+                double evaporationRate, double target,
                 int iteration, double[][] features, double[][] classes, 
                 int numHiddenNeuron, double learningRate, int epoch, 
                 double splitRatio) {
@@ -1298,7 +1301,7 @@ public class Main extends javax.swing.JFrame {
             this.progressBar = progressBar;
             this.resultTable = resultTable;
             this.numberOfAnts = numberOfAnts;
-            this.Q = Q;
+            this.Q = beta;
             this.evaporationRate = evaporationRate;
             this.alpha = alpha;
             this.beta = beta;
@@ -1310,6 +1313,7 @@ public class Main extends javax.swing.JFrame {
             this.splitRatio = splitRatio;
             this.learningRate = learningRate;
             this.lossChart = lossChart;
+            this.target = target;
         }
         
         @Override
@@ -1333,7 +1337,8 @@ public class Main extends javax.swing.JFrame {
 //                    this.progressBar, this.resultTable, this.lossChart);
 
             AntColonyOptimization_2 aco = new AntColonyOptimization_2(
-                    this.numberOfAnts, this.iteration, this.alpha, this.Q, 1.0);
+                    this.numberOfAnts, this.iteration, this.alpha, this.Q, 
+                    this.target);
             aco.initializePopulations(features, classes, numHiddenNeuron, 
                     learningRate, epoch, splitRatio);
             aco.execute(this.progressBar, this.resultTable, this.lossChart);
@@ -1350,13 +1355,15 @@ public class Main extends javax.swing.JFrame {
         private final javax.swing.JLabel lossChart;
         private final javax.swing.JLabel classifiedRatioText;
         private final javax.swing.JTable nnResultTable;
+        private final javax.swing.JTextField rewardFactorField;
         private final List<OutputNeuronLog> logs;
         
         public RunNeuralNetworkWorker(NeuralNetwork nn, 
                 JProgressBar progressBar, javax.swing.JLabel lossChart, 
                 List<OutputNeuronLog> logs, 
                 javax.swing.JLabel classifiedRatioText, 
-                javax.swing.JTable nnResultTable) {
+                javax.swing.JTable nnResultTable, 
+                javax.swing.JTextField rewardFactorField) {
             
             this.nn = nn;
             this.progressBar = progressBar;
@@ -1364,6 +1371,7 @@ public class Main extends javax.swing.JFrame {
             this.logs = logs;
             this.classifiedRatioText = classifiedRatioText;
             this.nnResultTable = nnResultTable;
+            this.rewardFactorField = rewardFactorField;
         }
         
         @Override
@@ -1378,8 +1386,9 @@ public class Main extends javax.swing.JFrame {
         
         @Override
         protected Object doInBackground() throws Exception {
-            this.nn.fit(this.progressBar, this.lossChart, this.logs, 
-                    this.classifiedRatioText, this.nnResultTable);
+            ConfusionMatrix cm = this.nn.fit(this.progressBar, this.lossChart, this.logs, 
+                    this.classifiedRatioText, this.nnResultTable, this.rewardFactorField);
+//            this.rewardFactorField.setText(String.valueOf(cm.getAccuracy()));
             return null;
         }
         

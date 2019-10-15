@@ -405,7 +405,8 @@ public class NeuralNetwork {
             javax.swing.JLabel neuralNetworkLossChart, 
             List<OutputNeuronLog> logs, 
             javax.swing.JLabel classifiedRatioText, 
-            javax.swing.JTable nnResultTable) {
+            javax.swing.JTable nnResultTable, 
+            javax.swing.JTextField rewardFactorField) {
         this.epochLoss = new ArrayList<>();
         int progress = 0;
         int currentProgress = 0;
@@ -485,7 +486,7 @@ public class NeuralNetwork {
     
         this.saveWeight(progressBar);
         
-        this.score(this.testData, this.testTarget, model);
+        this.score(this.testData, this.testTarget, model, rewardFactorField);
         return cm;
     }
     
@@ -515,7 +516,7 @@ public class NeuralNetwork {
     }
     
     public void score(double[][] data, double[][] target, 
-            DefaultTableModel model) {
+            DefaultTableModel model, javax.swing.JTextField rewardFactorField) {
         
         this.loadWeight();
 
@@ -538,6 +539,8 @@ public class NeuralNetwork {
             cm.update(maxActualIndex, maxPredictedIndex);
             
         }
+        
+        rewardFactorField.setText(String.valueOf(cm.getAccuracy()));
         
         model.setValueAt(model.getValueAt(0, 1) + ", (Test = " + 
                 Math.round(((cm.getAccuracy() * 100.0) / 100.0) 
@@ -656,6 +659,7 @@ public class NeuralNetwork {
             for (int i = 0; i < this.numOutputNeuron; i++) {
                 predicted[i] = this.outputNeurons[i].getMappedValue();
             }
+
             results[j] = predicted;
         }
         
