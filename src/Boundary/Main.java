@@ -600,7 +600,7 @@ public class Main extends javax.swing.JFrame {
 
         jLabel21.setText("Epoch");
 
-        epochField.setValue(1000);
+        epochField.setValue(100);
 
         jLabel22.setText("Learning Rate");
 
@@ -651,11 +651,11 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        populationField.setValue(10);
+        populationField.setValue(2);
 
         jLabel15.setText("Population");
 
-        iterationField.setValue(10);
+        iterationField.setValue(3);
 
         jLabel16.setText("Iteration");
 
