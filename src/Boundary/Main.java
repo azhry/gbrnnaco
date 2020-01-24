@@ -153,6 +153,7 @@ public class Main extends javax.swing.JFrame {
         jToolBar4 = new javax.swing.JToolBar();
         jPanel12 = new javax.swing.JPanel();
         jSplitPane6 = new javax.swing.JSplitPane();
+        jPanel14 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         resultProgramTable = new javax.swing.JTable();
         jPanel13 = new javax.swing.JPanel();
@@ -161,6 +162,9 @@ public class Main extends javax.swing.JFrame {
         runNeuralNetworkAcoProgramButton = new javax.swing.JButton();
         nnAccuracyText = new javax.swing.JLabel();
         nnAcoAccuracyText = new javax.swing.JLabel();
+        jPanel15 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        programResultTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -250,7 +254,7 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(61, 61, 61)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addContainerGap(249, Short.MAX_VALUE))
         );
 
         jToolBar1.add(jPanel1);
@@ -390,7 +394,7 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(runGaborButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel3);
@@ -449,7 +453,7 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jLabel14)
                 .addGap(3, 3, 3)
                 .addComponent(splitRatioText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 173, Short.MAX_VALUE)
                 .addComponent(classifiedRatio)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(outputNeuronLogPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -637,7 +641,7 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jLabel22)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(learningRateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
                 .addComponent(runNeuralNetworkButton))
         );
 
@@ -744,7 +748,7 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(jLabel20)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(rewardFactorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
                 .addComponent(runNeuralNetworkAcoButton))
         );
 
@@ -765,6 +769,19 @@ public class Main extends javax.swing.JFrame {
         jPanel12.setLayout(new java.awt.GridLayout(1, 0));
 
         jSplitPane6.setDividerLocation(170);
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14.setLayout(jPanel14Layout);
+        jPanel14Layout.setHorizontalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel14Layout.setVerticalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jSplitPane6.setRightComponent(jPanel14);
 
         jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -812,6 +829,35 @@ public class Main extends javax.swing.JFrame {
 
         nnAcoAccuracyText.setText("Akurasi NN-ACO: ");
 
+        programResultTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"Accuracy", null},
+                {"Precision", null},
+                {"Recall", null},
+                {"F-Measure", null}
+            },
+            new String [] {
+                "", "Result"
+            }
+        ));
+        jScrollPane5.setViewportView(programResultTable);
+
+        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+        jPanel15.setLayout(jPanel15Layout);
+        jPanel15Layout.setHorizontalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+        );
+        jPanel15Layout.setVerticalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(189, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
         jPanel13Layout.setHorizontalGroup(
@@ -822,9 +868,13 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nnAcoAccuracyText)
-                    .addComponent(nnAccuracyText))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nnAcoAccuracyText)
+                            .addComponent(nnAccuracyText))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -838,7 +888,9 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(nnAccuracyText)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nnAcoAccuracyText)
-                .addContainerGap(393, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jSplitPane6.setLeftComponent(jPanel13);
@@ -859,7 +911,7 @@ public class Main extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 770, Short.MAX_VALUE)
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Home");
@@ -1079,6 +1131,11 @@ public class Main extends javax.swing.JFrame {
             finalClasses[i] = classes.get(i);
         }
         
+        ConfusionMatrix cm = new ConfusionMatrix();
+        DefaultTableModel model = (DefaultTableModel)programResultTable.getModel();
+        model.setRowCount(4);
+        model.setColumnCount(2);
+        
         int epoch = Integer.parseInt(String.valueOf(this.epochField.getValue()));
         double learningRate = Double.parseDouble(
                 this.learningRateField.getText());
@@ -1096,7 +1153,19 @@ public class Main extends javax.swing.JFrame {
                     == MathFx.maxIndex(finalClasses[i])) {
                 truePositives++;
             }
+            
+            cm.update(MathFx.maxIndex(finalClasses[i]), 
+                    MathFx.maxIndex(predicted[i]));
         }
+        
+        model.setValueAt("(" + Math.round(((cm.getAccuracy() * 100.0) / 100.0) 
+                    * 100.0) + "%)", 0, 1);
+        model.setValueAt("(" + Math.round(((cm.getPrecision() * 100.0) / 100.0) 
+                * 100.0) + "%)", 1, 1);
+        model.setValueAt("(" + Math.round(((cm.getRecall() * 100.0) / 100.0) 
+                * 100.0) + "%)", 2, 1);
+        model.setValueAt("(" + Math.round(((cm.getF1score() * 100.0) / 100.0) 
+                * 100.0) + "%)", 3, 1);
         
         double accuracy = (double)truePositives / (double)finalFeatures.length;
         this.nnAccuracyText.setText("Akurasi NN: " + 
@@ -1229,6 +1298,11 @@ public class Main extends javax.swing.JFrame {
             finalClasses[i] = classes.get(i);
         }
         
+        ConfusionMatrix cm = new ConfusionMatrix();
+        DefaultTableModel model = (DefaultTableModel)programResultTable.getModel();
+        model.setRowCount(4);
+        model.setColumnCount(2);
+        
         int epoch = Integer.parseInt(String.valueOf(this.epochField.getValue()));
         double learningRate = Double.parseDouble(
                 this.learningRateField.getText());
@@ -1248,7 +1322,18 @@ public class Main extends javax.swing.JFrame {
                     == MathFx.maxIndex(finalClasses[i])) {
                 truePositives++;
             }
+            
+            cm.update(MathFx.maxIndex(finalClasses[i]), MathFx.maxIndex(predicted[i]));
         }
+        
+        model.setValueAt("(" + Math.round(((cm.getAccuracy() * 100.0) / 100.0) 
+                    * 100.0) + "%)", 0, 1);
+        model.setValueAt("(" + Math.round(((cm.getPrecision() * 100.0) / 100.0) 
+                * 100.0) + "%)", 1, 1);
+        model.setValueAt("(" + Math.round(((cm.getRecall() * 100.0) / 100.0) 
+                * 100.0) + "%)", 2, 1);
+        model.setValueAt("(" + Math.round(((cm.getF1score() * 100.0) / 100.0) 
+                * 100.0) + "%)", 3, 1);
         
         double accuracy = (double)truePositives / (double)finalFeatures.length;
         this.nnAcoAccuracyText.setText("Akurasi NN-ACO: " + 
@@ -1601,6 +1686,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -1613,6 +1700,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JSplitPane jSplitPane3;
@@ -1640,6 +1728,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTable nnResultTable;
     private javax.swing.JPanel outputNeuronLogPanel;
     private javax.swing.JSpinner populationField;
+    private javax.swing.JTable programResultTable;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JSpinner psiDegField;
     private javax.swing.JTable resultProgramTable;

@@ -683,6 +683,28 @@ public class NeuralNetwork {
         return results;
     }
     
+    public double[][] predictResult(double[][] data, 
+            javax.swing.JTable programResultTable) {
+        this.loadWeight();
+        double[][] results = new double[data.length][this.numOutputNeuron];
+        
+        ConfusionMatrix cm = new ConfusionMatrix();
+        DefaultTableModel model = (DefaultTableModel)programResultTable.getModel();
+        model.setRowCount(4);
+        model.setColumnCount(2);
+        
+        for (int j = 0; j < data.length; j++) {
+            this.feedforward(data[j]);
+            double[] predicted = new double[this.numOutputNeuron];
+            for (int i = 0; i < this.numOutputNeuron; i++) {
+                predicted[i] = this.outputNeurons[i].getMappedValue();
+            }
+            results[j] = predicted;
+        }
+        
+        return results;
+    }
+    
     public double getError() {
         return this.error;
     }
