@@ -628,7 +628,7 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(learningRateField, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel22, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(181, Short.MAX_VALUE))
+                .addContainerGap(167, Short.MAX_VALUE))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -641,8 +641,9 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jLabel22)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(learningRateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
-                .addComponent(runNeuralNetworkButton))
+                .addGap(49, 49, 49)
+                .addComponent(runNeuralNetworkButton)
+                .addContainerGap(114, Short.MAX_VALUE))
         );
 
         jSplitPane5.setLeftComponent(jPanel10);
@@ -677,7 +678,7 @@ public class Main extends javax.swing.JFrame {
 
         jLabel20.setText("Target");
 
-        rewardFactorField.setText("1.0");
+        rewardFactorField.setText("0.8");
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -748,8 +749,9 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(jLabel20)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(rewardFactorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 163, Short.MAX_VALUE)
-                .addComponent(runNeuralNetworkAcoButton))
+                .addGap(48, 48, 48)
+                .addComponent(runNeuralNetworkAcoButton)
+                .addContainerGap(115, Short.MAX_VALUE))
         );
 
         jSplitPane5.setRightComponent(jPanel11);
@@ -1239,6 +1241,7 @@ public class Main extends javax.swing.JFrame {
                 labels.length + 2, learningRate, epoch, splitRatio);
 
         System.out.println("START ACO");
+        this.runNeuralNetworkAcoButton.setText("Running...");
 //        AntColonyOptimization_2 aco = new AntColonyOptimization_2(
 //                    population, iteration, alpha, beta, rewardFactor);
 //        aco.initializePopulations(finalFeatures, finalClasses, labels.length + 2, 
@@ -1248,7 +1251,7 @@ public class Main extends javax.swing.JFrame {
                 this.neuralNetworkAcoLossChart,
                 this.nnAcoResultTable, population, beta, alpha, beta, 
                 evaporationRate, rewardFactor, iteration, finalFeatures, finalClasses, 
-                labels.length + 2, learningRate, epoch, splitRatio)
+                labels.length + 2, learningRate, epoch, splitRatio, this.runNeuralNetworkAcoButton)
                 .execute();
         
     }//GEN-LAST:event_runNeuralNetworkAcoButtonActionPerformed
@@ -1309,6 +1312,7 @@ public class Main extends javax.swing.JFrame {
         double splitRatio = Double.parseDouble(this.splitRatioText.getText());
         NeuralNetwork nn = new NeuralNetwork(finalFeatures, finalClasses, 
                 labels.length + 2);
+        
         double[][] predicted = nn.predictOpt(finalFeatures);
         
         int truePositives = 0;
@@ -1358,6 +1362,7 @@ public class Main extends javax.swing.JFrame {
         private final JProgressBar progressBar;
         private final javax.swing.JTable resultTable;
         private final javax.swing.JLabel lossChart;
+        private final javax.swing.JButton runButton;
         private final int numberOfAnts;
         private final double Q;
         private final double alpha;
@@ -1380,7 +1385,7 @@ public class Main extends javax.swing.JFrame {
                 double evaporationRate, double target,
                 int iteration, double[][] features, double[][] classes, 
                 int numHiddenNeuron, double learningRate, int epoch, 
-                double splitRatio) {
+                double splitRatio, javax.swing.JButton runButton) {
             
             this.nn = nn;
             this.progressBar = progressBar;
@@ -1399,6 +1404,7 @@ public class Main extends javax.swing.JFrame {
             this.learningRate = learningRate;
             this.lossChart = lossChart;
             this.target = target;
+            this.runButton = runButton;
         }
         
         @Override
@@ -1407,7 +1413,7 @@ public class Main extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, 
                     "Ant Colony Optimization process is done", "Done", 
                     JOptionPane.INFORMATION_MESSAGE);
-            
+            this.runButton.setText("Run Neural Network + ACO");
             repaint();
         }
         

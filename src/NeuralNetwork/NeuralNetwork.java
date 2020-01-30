@@ -216,7 +216,7 @@ public class NeuralNetwork {
             }
             
             JSONObject hidden2OutputWeights = (JSONObject)new JSONParser()
-                        .parse(new FileReader("Hidden2OutputWeights.json"));
+                        .parse(new FileReader("Hidden2OutputWeightsOpt.json"));
             numRows = hidden2OutputWeights.size();
             numCols = ((JSONObject)hidden2OutputWeights.get("0")).size();
             for (int i = 0; i < numRows; i++) {
@@ -476,7 +476,7 @@ public class NeuralNetwork {
                     * 100.0) + "%)", 3, 1);
             this.epochLoss.add(this.error);
             this.displayLossChart(neuralNetworkLossChart);
-            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
+            // System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
             
             if (e == this.EPOCH - 1) {
                 break;
@@ -492,7 +492,7 @@ public class NeuralNetwork {
     
     public ConfusionMatrix scoreOpt(double[][] data, double[][] target) {
         
-//        this.loadWeightOpt();
+        this.loadWeightOpt();
         ConfusionMatrix cm = new ConfusionMatrix();
         for (int i = 0; i < data.length; i++) {
             this.feedforward(data[i]);
@@ -609,7 +609,7 @@ public class NeuralNetwork {
 //            for (double[] w : this.hidden1Hidden2Connections) {
 //                System.out.println(Arrays.toString(w));
 //            }
-            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
+            // System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
         }
         
         this.saveWeight();
@@ -639,14 +639,28 @@ public class NeuralNetwork {
                 this.backpropagation(this.target[i]);
             }
             
+            if (e == this.EPOCH - 1) {
+                break;
+            }
+            cm.reset();
+            
 //            for (double[] w : this.hidden1Hidden2Connections) {
 //                System.out.println(Arrays.toString(w));
 //            }
-            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
+            //System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
         }
         
-//        this.saveWeightOpt();
-        return this.scoreOpt(this.testData, this.testTarget);
+        this.saveWeightOpt();
+        this.scoreOpt(this.testData, this.testTarget);
+        return cm;
+    }
+    
+    public double[][] getTestData() {
+        return this.testData;
+    }
+    
+    public double[][] getTestTarget() {
+        return this.testTarget;
     }
     
     public double[][] predictOpt(double[][] data) {

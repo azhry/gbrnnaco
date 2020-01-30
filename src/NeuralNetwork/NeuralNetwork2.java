@@ -554,7 +554,7 @@ public class NeuralNetwork2 {
                     * 100.0) + "%)", 3, 1);
             this.epochLoss.add(this.error);
             this.displayLossChart(neuralNetworkLossChart);
-            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
+            //System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
             
             if (e == this.EPOCH - 1) {
                 break;
@@ -682,10 +682,10 @@ public class NeuralNetwork2 {
                 
             }
             
-            for (double[] w : this.hidden1Hidden2Connections) {
-                System.out.println(Arrays.toString(w));
-            }
-            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
+//            for (double[] w : this.hidden1Hidden2Connections) {
+//                System.out.println(Arrays.toString(w));
+//            }
+//            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
         }
         
         this.saveWeight();
@@ -715,10 +715,10 @@ public class NeuralNetwork2 {
                 this.backpropagation(this.target[i]);
             }
             
-            for (double[] w : this.hidden1Hidden2Connections) {
-                System.out.println(Arrays.toString(w));
-            }
-            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
+//            for (double[] w : this.hidden1Hidden2Connections) {
+//                System.out.println(Arrays.toString(w));
+//            }
+//            System.out.println("EPOCH " + (e + 1) + " LOSS: " + this.error);
         }
         
 //        this.saveWeightOpt();

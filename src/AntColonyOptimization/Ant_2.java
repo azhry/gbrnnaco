@@ -5,6 +5,7 @@
  */
 package AntColonyOptimization;
 
+import Control.MathFx;
 import NeuralNetwork.ConfusionMatrix;
 import NeuralNetwork.NeuralNetwork;
 
@@ -75,8 +76,15 @@ public class Ant_2 {
         this.nn.setHidden2OutputConnections(this.backupNn
                 .getHidden2OutputConnections());
         
-        ConfusionMatrix cm = this.nn.fitOpt();
+        ConfusionMatrix cmm = this.nn.fitOpt();
+        System.out.println("TRAIN ACCURACY: " + cmm.getAccuracy());
+        
+        double[][] finalFeatures = this.nn.getTestData();
+        double[][] finalClasses = this.nn.getTestTarget();
+        ConfusionMatrix cm = this.nn.scoreOpt(finalFeatures, finalClasses);
+        
         this.fitness = cm.getAccuracy();
+        System.out.println("TEST ACCURACY: " + this.fitness);
         return cm;
     }
     

@@ -98,10 +98,9 @@ public class AntColonyOptimization_2 {
                 progressBar.setString(progress + "%");
             }
             
-            System.out.println("TOTAL: " + totalPheromones);
             
+            System.out.println("CURRENT MAX FITNESS: " + currentMaxFitness);
             if (currentMaxFitness > target) {
-                System.out.println(currentMaxFitness);
                 this.ants.get(fittestIndex).getNn().saveWeightOpt();
                 model.setValueAt("(Test = " + Math.round(((cmMax.getAccuracy() * 100.0) / 100.0) 
                     * 100.0) + "%)", 0, 1);
@@ -117,43 +116,38 @@ public class AntColonyOptimization_2 {
                 return this.ants.get(fittestIndex).getNn();
             }
             
-            for (int j = 0; j < this.m; j++) {
-                this.ants.get(j).updatePheromones(j == fittestIndex);
-                this.ants.get(j).calculateTransferProbability(totalPheromones);
-                System.out.println(this.ants.get(j).getTransferProbability());
-                if (this.ants.get(j).getTransferProbability() > MathFx.randUniform(1)) {
-                    System.out.println("ADDED");
-                    this.weightMatrices.add(this.ants.get(j).getPheromoneMatrix());
-                }
-            }
+//            for (int j = 0; j < this.m; j++) {
+//                this.ants.get(j).updatePheromones(j == fittestIndex);
+//                this.ants.get(j).calculateTransferProbability(totalPheromones);
+//                if (this.ants.get(j).getTransferProbability() > MathFx.randUniform(1)) {
+//                    this.weightMatrices.add(this.ants.get(j).getPheromoneMatrix());
+//                }
+//            }
             
-            if (this.weightMatrices.size() > 0) {
-                for (int j = 0; j < this.m; j++) {
-                    double[][][] pheromones = 
-                            this.weightMatrices.get(
-                                    MathFx.randInt(this.weightMatrices.size() - 1));
-                    this.ants.get(j).setBackupWeights(pheromones[0], 
-                            pheromones[1], pheromones[2]);
-                }
-            }
-            
-            
+//            if (this.weightMatrices.size() > 0) {
+//                for (int j = 0; j < this.m; j++) {
+//                    double[][][] pheromones = 
+//                            this.weightMatrices.get(
+//                                    MathFx.randInt(this.weightMatrices.size() - 1));
+//                    this.ants.get(j).setBackupWeights(pheromones[0], 
+//                            pheromones[1], pheromones[2]);
+//                }
+//            }
 
             model.setValueAt("(Test = " + Math.round(((cmMax.getAccuracy() * 100.0) / 100.0) 
-                    * 100.0) + "%)", 0, 1);
+                        * 100.0) + "%)", 0, 1);
             model.setValueAt("(Test = " + Math.round(((cmMax.getPrecision() * 100.0) / 100.0) 
                     * 100.0) + "%)", 1, 1);
             model.setValueAt("(Test = " + Math.round(((cmMax.getRecall() * 100.0) / 100.0) 
                     * 100.0) + "%)", 2, 1);
             model.setValueAt("(Test = " + Math.round(((cmMax.getF1score() * 100.0) / 100.0) 
                     * 100.0) + "%)", 3, 1);
-
             this.epochLoss.add(this.ants.get(fittestIndex).getNn().getError());
             this.displayLossChart(neuralNetworkLossChart);
             
             if (i == this.NC - 1) {
-                System.out.println(currentMaxFitness);
                 this.ants.get(fittestIndex).getNn().saveWeightOpt();
+                
                 return this.ants.get(fittestIndex).getNn();
             }
         }
