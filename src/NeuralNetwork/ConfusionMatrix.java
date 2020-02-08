@@ -50,6 +50,15 @@ public class ConfusionMatrix {
         this.calculateF1score();
     }
     
+    public void showMatrix() {
+        for (int i = 0; i < this.matrix.length; i++) {
+            for (int j = 0; j < this.matrix[i].length; j++) {
+                System.out.print(this.matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+    
     public double getAccuracy() {
         return this.accuracy;
     }

@@ -512,6 +512,7 @@ public class NeuralNetwork {
             cm.update(maxActualIndex, maxPredictedIndex);
             
         }
+        cm.showMatrix();
         return cm;
     }
     
@@ -540,6 +541,7 @@ public class NeuralNetwork {
             
         }
         
+        cm.showMatrix();
         rewardFactorField.setText(String.valueOf(cm.getAccuracy()));
         
         model.setValueAt(model.getValueAt(0, 1) + ", (Test = " + 
@@ -581,6 +583,7 @@ public class NeuralNetwork {
             
         }
         
+        cm.showMatrix();
         model.setValueAt(model.getValueAt(0, 1) + ", (Test = " + 
                 Math.round(((cm.getAccuracy() * 100.0) / 100.0) 
                 * 100.0) + "%)", 0, 1);
@@ -639,6 +642,7 @@ public class NeuralNetwork {
                 this.backpropagation(this.target[i]);
             }
             
+            cm.showMatrix();
             if (e == this.EPOCH - 1) {
                 break;
             }
